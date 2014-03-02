@@ -27,6 +27,9 @@ TEMPLATE_DEBUG = True
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
+TEMPLATE_DIRS = (
+    os.path.normpath(os.path.join(BASE_DIR, 'templates/')),
+)
 
 # Application definition
 
