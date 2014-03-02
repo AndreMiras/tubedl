@@ -1,0 +1,10 @@
+= Install =
+
+Follow these instructions:
+https://devcenter.heroku.com/articles/getting-started-with-django
+
+Install honcho instead of foreman
+pip install honcho
+
+Then:
+honcho start --port 8000
