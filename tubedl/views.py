@@ -46,15 +46,11 @@ def home(request):
     if request.method == 'POST':
         form = DownloadForm(request.POST)
         if form.is_valid():
-            # Process the data in form.cleaned_data
             url = form.cleaned_data['url']
-            # TODO: dl the video with youtubedl
-            print "url:", url
             video_path = start_download(url, DOWNLOAD_DIR)
-            messages.success(request, 'Your download will start shortly.')
+            # messages.success(request, 'Your download will start shortly.')
             response = serve_file(video_path)
             return response
-            return HttpResponseRedirect(reverse('home'))
     else:
         form = DownloadForm() # An unbound form
     data = {

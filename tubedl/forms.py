@@ -5,7 +5,7 @@ class DownloadForm(forms.Form):
     url = forms.URLField(
         widget=forms.TextInput(attrs={
             'placeholder': 'http://somesite.com/video',
-            'class': 'input-xlarge',
+            'class': 'input-xxlarge',
             }))
 
     # TODO: also verify it's part of supported services
