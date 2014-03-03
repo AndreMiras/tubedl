@@ -8,3 +8,4 @@ pystache==0.5.3
 static==1.0.2
 wsgiref==0.1.2
 youtube-dl==2014.02.28
+newrelic==2.14.0.11
