@@ -1,16 +1,62 @@
+import os
 import json
+import urllib
+from mimetypes import MimeTypes
 from django.http import Http404
 from django.contrib import messages
 from django.shortcuts import render
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
+from youtube_dl import YoutubeDL
 from tubedl.forms import DownloadForm, ContactForm
 
 
+DOWNLOAD_DIR = "/tmp/"
+
+def start_download(url, directory):
+    if directory:
+        directory = os.path.abspath(directory) + '/'
+    ydl_options = {
+        # 'outtmpl': directory + u'%(title)s-%(id)s.%(ext)s',
+        'outtmpl': directory + u'%(id)s.%(ext)s',
+    }
+    with YoutubeDL(ydl_options) as ydl:
+        ydl.add_default_info_extractors()
+        # TODO: do the extraction while downloading
+        info = ydl.extract_info(url, download=False)
+        video_path = "%s%s.%s" % (directory, info['id'], info['ext'])
+        ydl.download([url])
+        return video_path
+
+
+def serve_file(file_path):
+    basename = os.path.basename(file_path)
+    mime = MimeTypes()
+    url = urllib.pathname2url(file_path)
+    mimetype, encoding = mime.guess_type(url)
+    f = open(file_path)
+    response = HttpResponse(f.read(), mimetype = mimetype)
+    response['Content-Disposition'] = 'attachment; filename=' + basename
+    f.close()
+    return response
+
 def home(request):
-    form = DownloadForm() # An unbound form
+    if request.method == 'POST':
+        form = DownloadForm(request.POST)
+        if form.is_valid():
+            # Process the data in form.cleaned_data
+            url = form.cleaned_data['url']
+            # TODO: dl the video with youtubedl
+            print "url:", url
+            video_path = start_download(url, DOWNLOAD_DIR)
+            messages.success(request, 'Your download will start shortly.')
+            response = serve_file(video_path)
+            return response
+            return HttpResponseRedirect(reverse('home'))
+    else:
+        form = DownloadForm() # An unbound form
     data = {
         'form': form,
     }
