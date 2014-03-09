@@ -24,11 +24,11 @@
       </button>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="#" onclick="$('input[name=audio_only]').prop('checked', false); $('#download_form').submit()">
+          <a href="#" onclick="$('input[name=audio_only]').val('False'); $('#download_form').submit()">
           <i class="fa fa-film"></i> Download video</a>
         </li>
         <li>
-          <a href="#" onclick="$('input[name=audio_only]').prop('checked', true); $('#download_form').submit()">
+          <a href="#" onclick="$('input[name=audio_only]').val('True'); $('#download_form').submit()">
           <i class="fa fa-music"></i> Download audio</a>
         </li>
       </ul>
