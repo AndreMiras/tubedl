@@ -8,9 +8,6 @@
   <h1><i class="fa fa-cloud-download fa-5x"></i></h1>
   <form action="" method="post" id="download_form" class="form-inline" role="form">{% csrf_token %}
     {{ form.non_field_errors }}
-    {% for hidden in form.hidden_fields %}
-      {{ hidden }}
-    {% endfor %}
     {% for field in form %}
     <div class="form-group">
       {{ field.errors }}
