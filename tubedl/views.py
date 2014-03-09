@@ -10,12 +10,13 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from youtube_dl import YoutubeDL
+from youtube_dl.postprocessor.ffmpeg import FFmpegExtractAudioPP
 from tubedl.forms import DownloadForm, ContactForm
 
 
 DOWNLOAD_DIR = "/tmp/"
 
-def start_download(url, directory):
+def start_download(url, directory, extract_audio=False):
     if directory:
         directory = os.path.abspath(directory) + '/'
     ydl_options = {
@@ -26,7 +27,15 @@ def start_download(url, directory):
         ydl.add_default_info_extractors()
         # TODO: do the extraction while downloading
         info = ydl.extract_info(url, download=False)
-        video_path = "%s%s.%s" % (directory, info['id'], info['ext'])
+        ext = info['ext']
+        if extract_audio:
+            ext = 'mp3'
+            # FFmpegExtractAudioPP(
+            #     preferredcodec=opts.audioformat, preferredquality=opts.audioquality, nopostoverwrites=opts.nopostoverwrites))
+            audio_extractor = FFmpegExtractAudioPP(
+                preferredcodec=ext)
+            ydl.add_post_processor(audio_extractor)
+        video_path = "%s%s.%s" % (directory, info['id'], ext)
         ydl.download([url])
         return video_path
 
@@ -47,12 +56,18 @@ def home(request):
         form = DownloadForm(request.POST)
         if form.is_valid():
             url = form.cleaned_data['url']
-            video_path = start_download(url, DOWNLOAD_DIR)
+            audio_only = form.cleaned_data['audio_only']
+            # save form value to session for user convenience
+            request.session['audio_only'] = audio_only
+            video_path = start_download(url, DOWNLOAD_DIR, audio_only)
             # messages.success(request, 'Your download will start shortly.')
             response = serve_file(video_path)
             return response
     else:
-        form = DownloadForm() # An unbound form
+        # restores form state from session for user convenience
+        audio_only = request.session.get('audio_only')
+        initial = {'audio_only': audio_only}
+        form = DownloadForm(initial=initial)
     data = {
         'form': form,
     }
