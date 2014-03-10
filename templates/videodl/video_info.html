@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="text-center">
+  <h2>{{ video_title }}</h2>
+  <img src="{{ video_thumbnail }}" alt="{{ video_title }}" class="img-thumbnail">
+
+  <form action="" method="post" id="download_form" class="form-inline" role="form">{% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+    <div class="form-group">
+      {{ field.errors }}
+      {{ field }}
+    </div>
+    {% endfor %}
+  
+    <div class="btn-group">
+      <button type="submit" class="btn btn-default">
+      <i class="fa fa-{{ form.audio_only.value|yesno:"music,film" }}"></i> Download {{ form.audio_only.value|yesno:"audio,video" }}</button>
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="#" onclick="$('input[name=audio_only]').val('False'); $('#download_form').submit()">
+          <i class="fa fa-film"></i> Download video</a>
+        </li>
+        <li>
+          <a href="#" onclick="$('input[name=audio_only]').val('True'); $('#download_form').submit()">
+          <i class="fa fa-music"></i> Download audio</a>
+        </li>
+      </ul>
+    </div>
+  </form>
+</div> <!-- text-centered -->
+
+{% endblock content %}
+

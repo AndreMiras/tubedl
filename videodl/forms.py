@@ -1,5 +1,6 @@
 import urllib2
 from django import forms
+from videodl.models import DownloadLink
 
 
 class DownloadForm(forms.Form):
@@ -15,9 +16,6 @@ class DownloadForm(forms.Form):
         widget=forms.TextInput(attrs={
             'placeholder': 'http://somesite.com/video',
             }))
-    audio_only = forms.BooleanField(
-        widget=forms.HiddenInput,
-        required=False)
 
     # TODO: also verify it's part of supported services
     def clean_giturl(self):
@@ -27,3 +25,9 @@ class DownloadForm(forms.Form):
         except urllib2.URLError as e:
             raise forms.ValidationError("The provided URL does not exist.")
         return data
+
+
+class DownloadFormat(forms.Form):
+    audio_only = forms.BooleanField(
+        widget=forms.HiddenInput,
+        required=False)
