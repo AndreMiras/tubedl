@@ -2,9 +2,8 @@ import os
 import json
 import urllib
 from mimetypes import MimeTypes
-from django.http import Http404
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -12,6 +11,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from youtube_dl import YoutubeDL
 from youtube_dl.postprocessor.ffmpeg import FFmpegExtractAudioPP
 from videodl.forms import DownloadForm
+from videodl.models import DownloadLink
 
 
 DOWNLOAD_DIR = "/tmp/"
@@ -48,18 +48,43 @@ def serve_file(file_path):
     f.close()
     return response
 
+def download(request, download_link_uuid):
+    download_link = get_object_or_404(DownloadLink, uuid=download_link_uuid)
+    url = download_link.url
+    audio_only = download_link.option_audio_only
+    video_path = start_download(url, audio_only)
+    response = serve_file(video_path)
+    return response
+
+def video_info(request, download_link_uuid):
+    download_link = get_object_or_404(DownloadLink, uuid=download_link_uuid)
+    url = download_link.url
+    redirect_url = reverse('download', kwargs={ 'download_link_uuid': download_link_uuid })
+    with YoutubeDL(YDL_OPTIONS) as ydl:
+        ydl.add_default_info_extractors()
+        # TODO: do the extraction while downloading
+        info = ydl.extract_info(url, download=False)
+    video_thumbnail = info['thumbnail']
+    video_title = info['title']
+    data = {
+        'video_thumbnail': video_thumbnail,
+        'video_title': video_title,
+        'redirect_url': redirect_url,
+    }
+    return render(request, 'videodl/video_info.html', data)
+
 def download_form(request):
     if request.method == 'POST':
         form = DownloadForm(request.POST)
         if form.is_valid():
             url = form.cleaned_data['url']
             audio_only = form.cleaned_data['audio_only']
+            # save the download info as a DownloadLink for later reshare
+            download_link, created = DownloadLink.objects.get_or_create(url=url)
             # save form value to session for user convenience
             request.session['audio_only'] = audio_only
-            video_path = start_download(url, audio_only)
-            # messages.success(request, 'Your download will start shortly.')
-            response = serve_file(video_path)
-            return response
+            messages.success(request, 'Your download will start shortly.')
+            return HttpResponseRedirect(reverse('video_info', kwargs={ 'download_link_uuid': download_link.uuid }))
     else:
         # restores form state from session for user convenience
         audio_only = request.session.get('audio_only')

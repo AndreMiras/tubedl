@@ -57,8 +57,12 @@
 
     </div> <!-- /container -->
 
+    {% block js %}
     <script src="{% static 'js/jquery-1.11.0.min.js' %}"></script>
     <script src="{% static 'js/bootstrap-3.1.1.min.js' %}"></script>
+    {% endblock js %}
+    {% block extrajs %}{% endblock %}
+
 
   </body>
 </html>

@@ -6,4 +6,6 @@ admin.autodiscover()
 urlpatterns = patterns('videodl.views',
     # url(r'^$', 'download_form', name='download_form'),
     url(r'^download_form/$', 'download_form', name='download_form'),
+    url(r'^video_info/(?P<download_link_uuid>[\w]+)/$', 'video_info', name='video_info'),
+    url(r'^download/(?P<download_link_uuid>[\w]+)/$', 'download', name='download'),
 )
