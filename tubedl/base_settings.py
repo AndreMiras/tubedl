@@ -33,7 +33,7 @@ TEMPLATE_DIRS = (
 
 # Application definition
 
-INSTALLED_APPS = (
+DJANGO_CORE_APP = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +41,15 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
+
+THIRDPARTY_APP = (
+)
+
+CUSTOM_APPS = (
+    'videodl',
+)
+
+INSTALLED_APPS = (DJANGO_CORE_APP + THIRDPARTY_APP + CUSTOM_APPS)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
