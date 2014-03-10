@@ -15,15 +15,15 @@ from tubedl.forms import DownloadForm, ContactForm
 
 
 DOWNLOAD_DIR = "/tmp/"
+YDL_OPTIONS = {
+    # 'outtmpl': directory + u'%(title)s-%(id)s.%(ext)s',
+    'outtmpl': directory + u'%(id)s.%(ext)s',
+}
 
 def start_download(url, directory, extract_audio=False):
     if directory:
         directory = os.path.abspath(directory) + '/'
-    ydl_options = {
-        # 'outtmpl': directory + u'%(title)s-%(id)s.%(ext)s',
-        'outtmpl': directory + u'%(id)s.%(ext)s',
-    }
-    with YoutubeDL(ydl_options) as ydl:
+    with YoutubeDL(YDL_OPTIONS) as ydl:
         ydl.add_default_info_extractors()
         # TODO: do the extraction while downloading
         info = ydl.extract_info(url, download=False)
@@ -90,7 +90,7 @@ def contact(request):
             return HttpResponseRedirect(reverse('home'))
     else:
         form = ContactForm()
-
-    return render(request, 'contact.html', {
+    data = {
         'form': form,
-    })
+    }
+    return render(request, 'contact.html', data)
