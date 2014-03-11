@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 
-{% block content %}
-
+{% block wraptitle %}
 <div class="text-center">
-  <h1>Tube DL</h1>
-  <h3>Online video downloader</h3>
-  <h1><i class="fa fa-cloud-download fa-5x"></i></h1>
+<h1>Tube DL</h1>
+<h3>Online video downloader</h3>
+<h1><i class="fa fa-cloud-download fa-5x"></i></h1>
+</div> <!-- text-centered -->
+{% endblock wraptitle %}
+
+{% block content %}
+<div class="text-center">
   <form action="{% url 'download_form' %}" method="post" id="download_form" class="form-inline" role="form">{% csrf_token %}
     {{ form.non_field_errors }}
     {% for field in form %}
@@ -19,6 +23,6 @@
       <button type="submit" class="btn btn-default"><i class="fa fa-cloud-download"></i> Download</button>
     </div>
   </form>
+  <a href="{% url 'supported_sites' %}"><i class="fa fa-info-circle"></i> Supported sites</a>
 </div> <!-- text-centered -->
-
 {% endblock content %}

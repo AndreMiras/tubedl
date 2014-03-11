@@ -23,3 +23,7 @@ input#id_url:focus {
 width: 500px;
 }
 */
+
+form#download_form {
+margin-bottom: 50px;
+}

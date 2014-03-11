@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block title %}{{ video_title }}{% endblock %}
 
+{% block content %}
 <div class="text-center">
-  <h2>{{ video_title }}</h2>
   <img src="{{ video_thumbnail }}" alt="{{ video_title }}" class="img-thumbnail">
 
   <form action="" method="post" id="download_form" class="form-inline" role="form">{% csrf_token %}
@@ -35,6 +35,4 @@
     </div>
   </form>
 </div> <!-- text-centered -->
-
 {% endblock content %}
-
