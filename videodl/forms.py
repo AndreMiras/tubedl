@@ -1,4 +1,5 @@
 import urllib2
+from youtube_dl import extractor
 from django import forms
 from videodl.models import DownloadLink
 
@@ -17,14 +18,22 @@ class DownloadForm(forms.Form):
             'placeholder': 'http://somesite.com/video',
             }))
 
-    # TODO: also verify it's part of supported services
-    def clean_giturl(self):
-        data = self.cleaned_data['url']
+    def clean_url(self):
+        """
+        - verifies the URL exists
+        - verifies at least one extractor recognizes it
+        """
+        url = self.cleaned_data['url']
+        extractors = list(extractor._ALL_CLASSES)
+        # GenericIE always returns True for suitable(url)
+        extractors.remove(extractor.generic.GenericIE)
+        if True not in [x.suitable(url) for x in extractors]:
+            raise forms.ValidationError("URL not supported.")
         try:
-            content = urllib2.urlopen(data)
+            content = urllib2.urlopen(url)
         except urllib2.URLError as e:
             raise forms.ValidationError("The provided URL does not exist.")
-        return data
+        return url
 
 
 class DownloadFormat(forms.Form):
