@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from youtube_dl import YoutubeDL
+from youtube_dl import YoutubeDL, extractor
 from youtube_dl.postprocessor.ffmpeg import FFmpegExtractAudioPP
 from videodl.forms import DownloadForm, DownloadFormat
 from videodl.models import DownloadLink
@@ -94,3 +94,11 @@ def download_form(request):
         'form': form,
     }
     return render(request, 'videodl/download_form.html', data)
+
+def supported_sites(request):
+    sites = [x.IE_NAME for x in extractor.gen_extractors()]
+    sites.sort()
+    data = {
+        "sites": sites,
+    }
+    return render(request, 'videodl/supported_sites.html', data)
