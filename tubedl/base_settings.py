@@ -46,6 +46,7 @@ THIRDPARTY_APP = (
 )
 
 CUSTOM_APPS = (
+    'tubedl',
     'videodl',
 )
 
