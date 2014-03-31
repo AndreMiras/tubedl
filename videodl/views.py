@@ -77,7 +77,7 @@ def video_info(request, download_link_uuid):
                 messages.error(
                     request,
                     "Could not download your video.\n" +
-                    "Exception was: %s" % (ex.messages))
+                    "Exception was: %s" % (ex.message))
                 return HttpResponseRedirect(reverse('home'))
         video_thumbnail = info.get('thumbnail')
         video_title = info.get('title')
