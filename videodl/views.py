@@ -69,10 +69,17 @@ def video_info(request, download_link_uuid):
         form = DownloadFormat(initial=initial)
         with YoutubeDL(YDL_OPTIONS) as ydl:
             ydl.add_default_info_extractors()
-            # TODO: do the extraction while downloading
-            info = ydl.extract_info(url, download=False)
-        video_thumbnail = info['thumbnail']
-        video_title = info['title']
+            try:
+                # TODO: do the extraction while downloading
+                info = ydl.extract_info(url, download=False)
+            except DownloadError as ex:
+                messages.error(
+                    request,
+                    "Could not download your video.\n" +
+                    "Exception was: %s" % (ex.messages))
+                return HttpResponseRedirect(reverse('home'))
+        video_thumbnail = info.get('thumbnail')
+        video_title = info.get('title')
     data = {
         'form': form,
         'video_thumbnail': video_thumbnail,
