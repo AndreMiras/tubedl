@@ -9,6 +9,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from youtube_dl import YoutubeDL, extractor
+from youtube_dl.utils import DownloadError
 from youtube_dl.postprocessor.ffmpeg import FFmpegExtractAudioPP
 from videodl.forms import DownloadForm, DownloadFormat
 from videodl.models import DownloadLink
