@@ -11,3 +11,6 @@ class DownloadLink(models.Model):
     created = models.DateTimeField(auto_now=True)
     last_download = models.DateTimeField(auto_now_add=True) # whenever views is incremented
     views = models.PositiveIntegerField(default=0)
+
+    def __unicode__(self):
+        return "%s" % (self.url)

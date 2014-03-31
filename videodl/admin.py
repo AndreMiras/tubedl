@@ -1,3 +1,4 @@
 from django.contrib import admin
+from videodl.models import DownloadLink
 
-# Register your models here.
+admin.site.register(DownloadLink)
