@@ -23,6 +23,7 @@ def contact(request):
         if form.is_valid():
             # Process the data in form.cleaned_data
             subject = form.cleaned_data['subject']
+            subject = settings.EMAIL_SUBJECT_PREFIX + subject
             message = form.cleaned_data['message']
             sender = form.cleaned_data['sender']
             cc_myself = form.cleaned_data['cc_myself']
