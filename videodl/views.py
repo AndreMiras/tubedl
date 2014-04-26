@@ -26,27 +26,27 @@ def start_download(url, extract_audio=False):
         ydl.add_default_info_extractors()
         # TODO: do the extraction while downloading
         info = ydl.extract_info(url, download=False)
-        ext = info['ext']
         if extract_audio:
-            ext = 'mp3'
+            info['ext'] = 'mp3'
             # FFmpegExtractAudioPP(
             #     preferredcodec=opts.audioformat, preferredquality=opts.audioquality, nopostoverwrites=opts.nopostoverwrites))
             audio_extractor = FFmpegExtractAudioPP(
-                preferredcodec=ext)
+                preferredcodec=info['ext'])
             ydl.add_post_processor(audio_extractor)
-        video_path = "%s%s.%s" % (DOWNLOAD_DIR, info['id'], ext)
+        video_path = "%s%s.%s" % (DOWNLOAD_DIR, info['id'], info['ext'])
         ydl.download([url])
-        return video_path
+        return (video_path, info)
 
-def serve_file(file_path):
-    basename = os.path.basename(file_path)
+def serve_file(file_path, filename=None):
+    if filename is None:
+        filename = os.path.basename(file_path)
     mime = MimeTypes()
     url = urllib.pathname2url(file_path)
     mimetype, encoding = mime.guess_type(url)
     f = open(file_path)
     response = HttpResponse(f.read(), mimetype = mimetype)
     response['Content-Length'] = os.path.getsize(file_path)
-    response['Content-Disposition'] = 'attachment; filename=' + basename
+    response['Content-Disposition'] = 'attachment; filename=' + filename
     f.close()
     return response
 
@@ -60,8 +60,10 @@ def video_info(request, download_link_uuid):
             audio_only = form.cleaned_data['audio_only']
             # save form value to session for user convenience
             request.session['audio_only'] = audio_only
-            video_path = start_download(url, audio_only)
-            response = serve_file(video_path)
+            video_path, info = start_download(url, audio_only)
+            title_sanitized = urllib.quote(info.get('title').encode('utf8'))
+            filename = title_sanitized + '.' + info.get('ext')
+            response = serve_file(video_path, filename)
             return response
     else:
         # restores form state from session for user convenience
