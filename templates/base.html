@@ -44,7 +44,6 @@
     </div>
 
     <div class="container">
-      {% if messages %}
       <div class="messages">
         {% for message in messages %}
         <div class="alert alert-{{ message.tags|bootstrap_tags }}">
@@ -53,7 +52,6 @@
         </div>
         {% endfor %} {# message in messages #}
       </div> <!-- messages -->
-      {% endif %}
       {% block wraptitle %}
       <div class="text-center">
       <h1>{% block title %}{% endblock %}</h1>
