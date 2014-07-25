@@ -60,7 +60,14 @@ def video_info(request, download_link_uuid):
             audio_only = form.cleaned_data['audio_only']
             # save form value to session for user convenience
             request.session['audio_only'] = audio_only
-            video_path, info = start_download(url, audio_only)
+            try:
+                video_path, info = start_download(url, audio_only)
+            except DownloadError as ex:
+                messages.error(
+                    request,
+                    "Could not download your video.\n" +
+                    "Exception was: %s" % (ex.message))
+                return HttpResponseRedirect(reverse('home'))
             title_sanitized = urllib.quote(info.get('title').encode('utf8'))
             filename = title_sanitized + '.' + info.get('ext')
             response = serve_file(video_path, filename)
