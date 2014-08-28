@@ -9,5 +9,7 @@ class Command(NoArgsCommand):
         hostname = os.environ.get("HOSTNAME")
         if hostname:
             self.stdout.write('ping "%s"' % hostname)
+            url = "http://" + hostname
+            urllib2.urlopen(url)
         else:
             self.stdout.write("Couldn't keep alive, HOSTNAME not set")
