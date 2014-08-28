@@ -1,1 +1,1 @@
-web: newrelic-admin run-program gunicorn tubedl.wsgi
+web: gunicorn tubedl.wsgi
