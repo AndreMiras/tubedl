@@ -7,5 +7,5 @@ psycopg2==2.5.2
 pystache==0.5.3
 static==1.0.2
 wsgiref==0.1.2
-youtube-dl==2014.07.25.1
+youtube-dl==2014.12.06.1
 django-uuidfield==0.5.0
