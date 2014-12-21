@@ -75,7 +75,7 @@ def serve_file(file_path, filename=None):
     url = urllib.pathname2url(file_path)
     mimetype, encoding = mime.guess_type(url)
     f = open(file_path)
-    response = HttpResponse(f.read(), mimetype = mimetype)
+    response = HttpResponse(f.read(), content_type = mimetype)
     response['Content-Length'] = os.path.getsize(file_path)
     response['Content-Disposition'] = 'attachment; filename=' + filename
     f.close()
