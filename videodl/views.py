@@ -135,6 +135,8 @@ def download_video(request, download_link_uuid):
     url = download_link.url
     if request.method == 'POST':
         form = DownloadFormat(request.POST)
+        download_link.views += 1
+        download_link.save()
         # TODO: else (!is_valid) this could crash with a video_thumbnail & video_title not defined
         if form.is_valid():
             audio_only = form.cleaned_data['audio_only']
