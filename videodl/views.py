@@ -53,47 +53,28 @@ def serve_file(file_path, filename=None):
 def video_info(request, download_link_uuid):
     download_link = get_object_or_404(DownloadLink, uuid=download_link_uuid)
     url = download_link.url
-    if request.method == 'POST':
-        form = DownloadFormat(request.POST)
-        # TODO: else (!is_valid) this could crash with a video_thumbnail & video_title not defined
-        if form.is_valid():
-            audio_only = form.cleaned_data['audio_only']
-            # save form value to session for user convenience
-            request.session['audio_only'] = audio_only
-            try:
-                video_path, info = start_download(url, audio_only)
-            except DownloadError as ex:
-                messages.error(
-                    request,
-                    "Could not download your video.\n" +
-                    "Exception was: %s" % (ex.message))
-                return HttpResponseRedirect(reverse('home'))
-            title_sanitized = urllib.quote(info.get('title').encode('utf8'))
-            filename = title_sanitized + '.' + info.get('ext')
-            response = serve_file(video_path, filename)
-            return response
-    else:
-        # restores form state from session for user convenience
-        audio_only = request.session.get('audio_only')
-        initial = {'audio_only': audio_only}
-        form = DownloadFormat(initial=initial)
-        with YoutubeDL(YDL_OPTIONS) as ydl:
-            ydl.add_default_info_extractors()
-            try:
-                # TODO: do the extraction while downloading
-                info = ydl.extract_info(url, download=False)
-            except DownloadError as ex:
-                messages.error(
-                    request,
-                    "Could not download your video.\n" +
-                    "Exception was: %s" % (ex.message))
-                return HttpResponseRedirect(reverse('home'))
-        video_thumbnail = info.get('thumbnail')
-        video_title = info.get('title')
+    # restores form state from session for user convenience
+    audio_only = request.session.get('audio_only')
+    initial = {'audio_only': audio_only}
+    form = DownloadFormat(initial=initial)
+    with YoutubeDL(YDL_OPTIONS) as ydl:
+        ydl.add_default_info_extractors()
+        try:
+            # TODO: do the extraction while downloading
+            info = ydl.extract_info(url, download=False)
+        except DownloadError as ex:
+            messages.error(
+                request,
+                "Could not download your video.\n" +
+                "Exception was: %s" % (ex.message))
+            return HttpResponseRedirect(reverse('home'))
+    video_thumbnail = info.get('thumbnail')
+    video_title = info.get('title')
     data = {
         'form': form,
         'video_thumbnail': video_thumbnail,
         'video_title': video_title,
+        'download_link_uuid': download_link_uuid,
     }
     return render(request, 'videodl/video_info.html', data)
 
@@ -120,3 +101,28 @@ def supported_sites(request):
         "sites": sites,
     }
     return render(request, 'videodl/supported_sites.html', data)
+
+def download_video(request, download_link_uuid):
+    download_link = get_object_or_404(DownloadLink, uuid=download_link_uuid)
+    url = download_link.url
+    if request.method == 'POST':
+        form = DownloadFormat(request.POST)
+        # TODO: else (!is_valid) this could crash with a video_thumbnail & video_title not defined
+        if form.is_valid():
+            audio_only = form.cleaned_data['audio_only']
+            # save form value to session for user convenience
+            request.session['audio_only'] = audio_only
+            try:
+                video_path, info = start_download(url, audio_only)
+            except DownloadError as ex:
+                messages.error(
+                    request,
+                    "Could not download your video.\n" +
+                    "Exception was: %s" % (ex.message))
+                return HttpResponseRedirect(reverse('home'))
+            title_sanitized = urllib.quote(info.get('title').encode('utf8'))
+            filename = title_sanitized + '.' + info.get('ext')
+            response = serve_file(video_path, filename)
+            return response
+    return HttpResponseRedirect(reverse('video_info', kwargs={ 'download_link_uuid': download_link_uuid }))
+

@@ -18,7 +18,8 @@ $("#video_info_download_form").submit(function( event ) {
 <div class="text-center">
   <img src="{{ video_thumbnail }}" alt="{{ video_title }}" class="img-thumbnail">
 
-  <form action="" method="post" id="video_info_download_form" class="form-inline" role="form">{% csrf_token %}
+  <form action="{% url 'download_video' download_link_uuid=download_link_uuid %}" method="post"
+    id="video_info_download_form" class="form-inline" role="form">{% csrf_token %}
     {{ form.non_field_errors }}
     {% for field in form %}
     <div class="form-group">
