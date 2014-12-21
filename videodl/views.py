@@ -21,21 +21,52 @@ YDL_OPTIONS = {
     'outtmpl': DOWNLOAD_DIR + u'%(id)s.%(ext)s',
 }
 
-def start_download(url, extract_audio=False):
+# This one is being pulled by $.ajax in the js.
+def get_progress(request):
+    # fetches the count or 0
+    progress = request.session.get('progress', 0)
+    # fetch the status or False
+    done = request.session.get('done', False)
+    data = {
+        "done": done,
+        "progress": progress,
+    }
+    data_json = simplejson.dumps(data)
+    return HttpResponse(data_json, mimetype='application/javascript')
+
+def progress_hook(d):
+    if d['status'] == 'downloading':
+        print "Downloading"
+        # d['downloaded_bytes']
+        # d['total_bytes']
+    elif d['status'] == 'finished':
+        print "Done downloading, now converting ..."
+
+def extract_file_path_helper(id, ext):
+    file_path = YDL_OPTIONS['outtmpl'] % ({ 'id': id, 'ext': ext })
+    return file_path
+
+def extract_info_helper(url, extract_audio):
     with YoutubeDL(YDL_OPTIONS) as ydl:
         ydl.add_default_info_extractors()
-        # TODO: do the extraction while downloading
         info = ydl.extract_info(url, download=False)
         if extract_audio:
             info['ext'] = 'mp3'
-            # FFmpegExtractAudioPP(
-            #     preferredcodec=opts.audioformat, preferredquality=opts.audioquality, nopostoverwrites=opts.nopostoverwrites))
+        return info
+
+def start_download(url, extract_audio=False):
+    with YoutubeDL(YDL_OPTIONS) as ydl:
+        ydl.add_progress_hook(progress_hook)
+        # TODO: do the extraction while downloading
+        info = extract_info_helper(url, extract_audio)
+        if extract_audio:
+            info['ext'] = 'mp3'
             audio_extractor = FFmpegExtractAudioPP(
                 preferredcodec=info['ext'])
             ydl.add_post_processor(audio_extractor)
-        video_path = "%s%s.%s" % (DOWNLOAD_DIR, info['id'], info['ext'])
+        file_path = extract_file_path_helper(info['id'], info['ext'])
         ydl.download([url])
-        return (video_path, info)
+        return (file_path, info)
 
 def serve_file(file_path, filename=None):
     if filename is None:
@@ -57,17 +88,14 @@ def video_info(request, download_link_uuid):
     audio_only = request.session.get('audio_only')
     initial = {'audio_only': audio_only}
     form = DownloadFormat(initial=initial)
-    with YoutubeDL(YDL_OPTIONS) as ydl:
-        ydl.add_default_info_extractors()
-        try:
-            # TODO: do the extraction while downloading
-            info = ydl.extract_info(url, download=False)
-        except DownloadError as ex:
-            messages.error(
-                request,
-                "Could not download your video.\n" +
-                "Exception was: %s" % (ex.message))
-            return HttpResponseRedirect(reverse('home'))
+    try:
+        info = extract_info_helper(url, audio_only)
+    except DownloadError as ex:
+        messages.error(
+            request,
+            "Could not download your video.\n" +
+            "Exception was: %s" % (ex.message))
+        return HttpResponseRedirect(reverse('home'))
     video_thumbnail = info.get('thumbnail')
     video_title = info.get('title')
     data = {
@@ -83,7 +111,7 @@ def download_form(request):
         form = DownloadForm(request.POST)
         if form.is_valid():
             url = form.cleaned_data['url']
-            # save the download info as a DownloadLink for later reshare
+            # saves the download info as a DownloadLink for later reshare
             download_link, created = DownloadLink.objects.get_or_create(url=url)
             # messages.success(request, 'Your download will start shortly.')
             return HttpResponseRedirect(reverse('video_info', kwargs={ 'download_link_uuid': download_link.uuid }))
@@ -113,7 +141,18 @@ def download_video(request, download_link_uuid):
             # save form value to session for user convenience
             request.session['audio_only'] = audio_only
             try:
-                video_path, info = start_download(url, audio_only)
+
+                # try to retrieve file from previous download
+                info = extract_info_helper(url, audio_only)
+                file_path = extract_file_path_helper(info['id'], info['ext'])
+                if file_path not in download_link.get_file_paths():
+                    # or download it then "cache" it
+                    file_path, info = start_download(url, audio_only)
+                    if audio_only:
+                        download_link.audio_path = file_path
+                    else:
+                        download_link.video_path = file_path
+                    download_link.save()
             except DownloadError as ex:
                 messages.error(
                     request,
@@ -122,7 +161,7 @@ def download_video(request, download_link_uuid):
                 return HttpResponseRedirect(reverse('home'))
             title_sanitized = urllib.quote(info.get('title').encode('utf8'))
             filename = title_sanitized + '.' + info.get('ext')
-            response = serve_file(video_path, filename)
+            response = serve_file(file_path, filename)
             return response
     return HttpResponseRedirect(reverse('video_info', kwargs={ 'download_link_uuid': download_link_uuid }))
 
