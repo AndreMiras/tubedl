@@ -3,11 +3,36 @@
 {% block extrajs %}
 <script type="text/javascript">
 $("#video_info_download_form").submit(function( event ) {
-  var new_elem = [
-    '<div class="alert alert-success">',
-    '<button type="button" class="close" data-dismiss="alert">×</button>',
-    'Your download will begin shortly.</div>'].join('\n');
-  $(".messages").append(new_elem);
+    // cancels the form's submit action
+    // event.preventDefault();
+
+    // informs the user the download will begin
+    var new_elem = [
+        '<div class="alert alert-success">',
+        '<i class="fa fa-2x fa-spinner fa-spin"></i>',
+        '<button type="button" class="close" data-dismiss="alert">×</button>',
+        'Your download will begin shortly.',
+        '</div>'].join('\n');
+    $(".messages").append(new_elem);
+    $('button[type="submit"]').attr('disabled', 'disabled');
+
+    /*
+    // handles the post and progress with jQuery
+    var form = $(this);
+    jQuery.ajax({
+        url: form.attr("action"),
+        method: 'POST',
+        data: form.serialize()
+    }).done(function (response) {
+        // Do something with the response
+        alert("Done");
+    }).fail(function () {
+        // Whoops; show an error.
+        // alert("Error");
+    }).always(function () {
+        $('button[type="submit"]').removeAttr('disabled');
+    });
+    */
 });
 </script>
 {% endblock extrajs %}
