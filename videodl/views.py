@@ -145,8 +145,9 @@ def download_video(request, download_link_uuid):
                 # try to retrieve file from previous download
                 info = extract_info_helper(url, audio_only)
                 file_path = extract_file_path_helper(info['id'], info['ext'])
-                if file_path not in download_link.get_file_paths():
-                    # or download it then "cache" it
+                # if file_path not in download_link.get_file_paths():
+                if not os.path.isfile(file_path):
+                    # or download it then "cache" it (for later use)
                     file_path, info = start_download(url, audio_only)
                     if audio_only:
                         download_link.audio_path = file_path
