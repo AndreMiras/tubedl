@@ -1,8 +1,7 @@
 import os
-import json
 import urllib
 from mimetypes import MimeTypes
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 from django.core.mail import send_mail
@@ -43,8 +42,7 @@ def get_progress(request):
         "done": done,
         "progress": progress,
     }
-    data_json = simplejson.dumps(data)
-    return HttpResponse(data_json, mimetype='application/javascript')
+    return JsonResponse(data)
 
 def progress_hook(d):
     if d['status'] == 'downloading':
@@ -178,11 +176,14 @@ def prepare_download_redirect(request, download_link_uuid):
                     "Exception was: %s" % (ex.message))
                 return HttpResponseRedirect(reverse('home'))
             if audio_only:
-                return HttpResponseRedirect(reverse('serve_audio_download',
-                    kwargs={ 'download_link_uuid': download_link_uuid }))
+                download_redirect_url = reverse('serve_audio_download',
+                    kwargs={ 'download_link_uuid': download_link_uuid })
             else:
-                return HttpResponseRedirect(reverse('serve_video_download',
-                    kwargs={ 'download_link_uuid': download_link_uuid }))
+                download_redirect_url = reverse('serve_video_download',
+                    kwargs={ 'download_link_uuid': download_link_uuid })
+            data = { "download_redirect_url": download_redirect_url }
+            # return HttpResponseRedirect(download_redirect_url)
+            return JsonResponse(data)
     return HttpResponseRedirect(reverse('video_info',
         kwargs={ 'download_link_uuid': download_link_uuid }))
 
