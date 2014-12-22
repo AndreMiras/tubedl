@@ -2,6 +2,7 @@ import os
 import json
 import urllib
 from mimetypes import MimeTypes
+from django.http import Http404
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 from django.core.mail import send_mail
@@ -20,6 +21,17 @@ YDL_OPTIONS = {
     # 'outtmpl': DOWNLOAD_DIR + u'%(title)s-%(id)s.%(ext)s',
     'outtmpl': DOWNLOAD_DIR + u'%(id)s.%(ext)s',
 }
+
+def supported_sites(request):
+    """
+    Returns the list of support sites.
+    """
+    sites = [x.IE_NAME for x in extractor.gen_extractors()]
+    sites.sort()
+    data = {
+        "sites": sites,
+    }
+    return render(request, 'videodl/supported_sites.html', data)
 
 # This one is being pulled by $.ajax in the js.
 def get_progress(request):
@@ -54,10 +66,14 @@ def extract_info_helper(url, extract_audio):
             info['ext'] = 'mp3'
         return info
 
-def start_download(url, extract_audio=False):
+def download_on_server(url, extract_audio=False):
+    """
+    Downloads the video locally on the server before serving it to clients.
+    """
     with YoutubeDL(YDL_OPTIONS) as ydl:
         ydl.add_progress_hook(progress_hook)
         # TODO: do the extraction while downloading
+        # TODO: the info was already extracted at this point
         info = extract_info_helper(url, extract_audio)
         if extract_audio:
             info['ext'] = 'mp3'
@@ -68,25 +84,15 @@ def start_download(url, extract_audio=False):
         ydl.download([url])
         return (file_path, info)
 
-def serve_file(file_path, filename=None):
-    if filename is None:
-        filename = os.path.basename(file_path)
-    mime = MimeTypes()
-    url = urllib.pathname2url(file_path)
-    mimetype, encoding = mime.guess_type(url)
-    f = open(file_path)
-    response = HttpResponse(f.read(), content_type = mimetype)
-    response['Content-Length'] = os.path.getsize(file_path)
-    response['Content-Disposition'] = 'attachment; filename=' + filename
-    f.close()
-    return response
-
 def video_info(request, download_link_uuid):
+    """
+    Retrieves video info and saves it to server database.
+    """
     download_link = get_object_or_404(DownloadLink, uuid=download_link_uuid)
     url = download_link.url
     # restores form state from session for user convenience
     audio_only = request.session.get('audio_only')
-    initial = {'audio_only': audio_only}
+    initial = { 'audio_only': audio_only }
     form = DownloadFormat(initial=initial)
     try:
         info = extract_info_helper(url, audio_only)
@@ -98,11 +104,12 @@ def video_info(request, download_link_uuid):
         return HttpResponseRedirect(reverse('home'))
     video_thumbnail = info.get('thumbnail')
     video_title = info.get('title')
+    download_link.title = video_title
+    download_link.save()
     data = {
         'form': form,
         'video_thumbnail': video_thumbnail,
-        'video_title': video_title,
-        'download_link_uuid': download_link_uuid,
+        'download_link': download_link,
     }
     return render(request, 'videodl/video_info.html', data)
 
@@ -122,22 +129,33 @@ def download_form(request):
     }
     return render(request, 'videodl/download_form.html', data)
 
-def supported_sites(request):
-    sites = [x.IE_NAME for x in extractor.gen_extractors()]
-    sites.sort()
-    data = {
-        "sites": sites,
-    }
-    return render(request, 'videodl/supported_sites.html', data)
+def serve_file_helper(file_path, filename=None):
+    """
+    Serves the given local server file to remote client via attachment.
+    """
+    if filename is None:
+        filename = os.path.basename(file_path)
+    mime = MimeTypes()
+    url = urllib.pathname2url(file_path)
+    mimetype, encoding = mime.guess_type(url)
+    f = open(file_path)
+    response = HttpResponse(f.read(), content_type = mimetype)
+    response['Content-Length'] = os.path.getsize(file_path)
+    response['Content-Disposition'] = 'attachment; filename=' + filename
+    f.close()
+    return response
 
-def download_video(request, download_link_uuid):
+def prepare_download_redirect(request, download_link_uuid):
+    """
+    Downloads the file on the local server if needed and redirects the client
+    to the download when ready.
+    """
     download_link = get_object_or_404(DownloadLink, uuid=download_link_uuid)
     url = download_link.url
     if request.method == 'POST':
         form = DownloadFormat(request.POST)
         download_link.views += 1
         download_link.save()
-        # TODO: else (!is_valid) this could crash with a video_thumbnail & video_title not defined
         if form.is_valid():
             audio_only = form.cleaned_data['audio_only']
             # save form value to session for user convenience
@@ -145,16 +163,13 @@ def download_video(request, download_link_uuid):
             try:
 
                 # try to retrieve file from previous download
-                info = extract_info_helper(url, audio_only)
-                file_path = extract_file_path_helper(info['id'], info['ext'])
+                file_path = download_link.get_file_path(audio_only)
                 # if file_path not in download_link.get_file_paths():
                 if not os.path.isfile(file_path):
                     # or download it then "cache" it (for later use)
-                    file_path, info = start_download(url, audio_only)
-                    if audio_only:
-                        download_link.audio_path = file_path
-                    else:
-                        download_link.video_path = file_path
+                    file_path, info = download_on_server(url, audio_only)
+                    download_link.set_file_path(file_path, audio_only)
+                    download_link.title = info.get('title')
                     download_link.save()
             except DownloadError as ex:
                 messages.error(
@@ -162,9 +177,33 @@ def download_video(request, download_link_uuid):
                     "Could not download your video.\n" +
                     "Exception was: %s" % (ex.message))
                 return HttpResponseRedirect(reverse('home'))
-            title_sanitized = urllib.quote(info.get('title').encode('utf8'))
-            filename = title_sanitized + '.' + info.get('ext')
-            response = serve_file(file_path, filename)
-            return response
-    return HttpResponseRedirect(reverse('video_info', kwargs={ 'download_link_uuid': download_link_uuid }))
+            if audio_only:
+                return HttpResponseRedirect(reverse('serve_audio_download',
+                    kwargs={ 'download_link_uuid': download_link_uuid }))
+            else:
+                return HttpResponseRedirect(reverse('serve_video_download',
+                    kwargs={ 'download_link_uuid': download_link_uuid }))
+    return HttpResponseRedirect(reverse('video_info',
+        kwargs={ 'download_link_uuid': download_link_uuid }))
+
+def serve_download_helper(request, download_link_uuid, extract_audio=False):
+    download_link = get_object_or_404(DownloadLink, uuid=download_link_uuid)
+    file_path = download_link.get_file_path(extract_audio)
+    url = download_link.url
+    _, extension = os.path.splitext(file_path)
+    title_sanitized = download_link.get_url_friendly_title()
+    filename = title_sanitized + extension
+    try:
+        response = serve_file_helper(file_path, filename)
+    except IOError:
+        raise Http404
+    return response
+
+def serve_video_download(request, download_link_uuid):
+    extract_audio = False
+    return serve_download_helper(request, download_link_uuid, extract_audio)
+
+def serve_audio_download(request, download_link_uuid):
+    extract_audio = True
+    return serve_download_helper(request, download_link_uuid, extract_audio)
 
