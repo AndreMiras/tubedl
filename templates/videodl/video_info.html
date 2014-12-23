@@ -47,6 +47,16 @@ $("#video_info_download_form").submit(function( event ) {
         $('button[type="submit"]').removeAttr('disabled');
     });
 });
+
+$(function(){
+  // http://stackoverflow.com/questions/13437446/how-to-display-selected-item-in-bootstrap-button-dropdown-title
+  $(".dropdown-menu li a").click(function(){
+    $(".btn:first-child").html($(this).html());
+    // $(".btn:first-child").val($(this).text());
+  });
+
+});
+
 </script>
 {% endblock extrajs %}
 
