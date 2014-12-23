@@ -14,10 +14,6 @@ h2.baseline {
 font-size: 15px;
 }
 
-input#id_url {
-width: 400px;
-}
-
 /*
 input#id_url:focus {
 width: 500px;
