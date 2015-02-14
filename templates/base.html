@@ -34,10 +34,12 @@
           <a class="navbar-brand" href="/"><i class="fa fa-cloud-download"></i> Tube DL</a>
         </div>
         <div class="collapse navbar-collapse">
+          {% url 'home' as home %}
+          {% url 'contact' as contact %}
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/"><i class="fa fa-home"></i> Home</a></li>
+            <li class="{% active home %}"><a href="{{ home }}"><i class="fa fa-home"></i> Home</a></li>
             <li><a href="https://github.com/AndreMiras/tubedl"><i class="fa fa-github-alt"></i> About</a></li>
-            <li><a href="{% url 'contact' %}"><i class="fa fa-envelope"></i> Contact</a></li>
+            <li class="{% active contact %}"><a href="{{ contact }}"><i class="fa fa-envelope"></i> Contact</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
