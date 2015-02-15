@@ -2,10 +2,39 @@
 
 {% block title %}Supported sites{% endblock %}
 
+{% block extrajs %}
+<script>
+$("#and_more").click(function() {
+  $("#supported_sites_full").toggle("slow");
+});
+</script>
+{% endblock extrajs %}
+
 {% block content %}
-<ul>
-  {% for site in sites %}
-  <li>{{ site }}</li>
-  {% endfor %}
-</ul>
+<div class="row">
+  <ul class="col-md-12">
+    <li class="col-md-3"><i class="fa fa-youtube-square"></i> Youtube</li>
+    <li class="col-md-3"><i class="fa fa-vimeo-square"></i> Vimeo</li>
+    <li class="col-md-3"><i class="fa fa-flickr"></i> Flickr</li>
+    <li class="col-md-3"><i class="fa fa-facebook-square"></i> Facebook</li>
+    <li class="col-md-3"><i class="fa"></i> Dailymotion</li>
+    <li class="col-md-3"><i class="fa"></i> Vevo</li>
+    <li class="col-md-3"><i class="fa"></i> Metacafe</li>
+    <li class="col-md-3"><i class="fa"></i> Vube</li>
+    <li class="col-md-3"><i class="fa"></i> Break</li>
+    <li class="col-md-3"><i class="fa"></i> Liveleak</li>
+  </ul> <!-- col-md-12 -->
+</div> <!-- row -->
+
+<h2><a href="#" id="and_more"><i class="fa fa-chevron-down"></i> and more...</li></a></h2>
+
+<div class="row" id="supported_sites_full" style="display: none">
+  <ul class="col-md-12">
+    {% for site in sites %}
+    <li class="col-md-3">
+      {{ site }}
+    </li>
+    {% endfor %}
+  </ul> <!-- col-md-12 -->
+</div> <!-- supported_sites_full -->
 {% endblock content %}
