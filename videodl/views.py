@@ -76,6 +76,7 @@ def download_on_server(url, extract_audio=False):
         if extract_audio:
             info['ext'] = 'mp3'
             audio_extractor = FFmpegExtractAudioPP(
+                downloader=ydl,
                 preferredcodec=info['ext'])
             ydl.add_post_processor(audio_extractor)
         file_path = extract_file_path_helper(info['id'], info['ext'])
