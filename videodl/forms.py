@@ -4,19 +4,24 @@ from django import forms
 from videodl.models import DownloadLink
 
 
-class DownloadForm(forms.Form):
+class DownloadForm(forms.ModelForm):
+    class Meta:
+        model = DownloadLink
+        fields = ['url']
+
     def __init__(self, *args, **kwargs):
         """
+        Customizes the URL widget with place order.
         Adds Twitter Bootstrap 3 "form-control" class.
         """
         super(DownloadForm, self).__init__(*args, **kwargs)
+        # Customizes the URL widget with place order.
+        self.fields['url'].widget = widget=forms.TextInput(attrs={
+            'placeholder': 'http://somesite.com/video',})
+        # Adds Twitter Bootstrap 3 "form-control" class.
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
-    url = forms.URLField(
-        widget=forms.TextInput(attrs={
-            'placeholder': 'http://somesite.com/video',
-            }))
 
     def clean_url(self):
         """
