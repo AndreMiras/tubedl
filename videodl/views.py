@@ -143,8 +143,7 @@ def serve_file_helper(file_path, filename=None):
     response['Content-Length'] = os.path.getsize(file_path)
     # how-to-encode-the-filename-parameter-of-content-disposition-header-in-http
     # http://stackoverflow.com/a/20933751
-    filename_encoded = urllib.quote(filename.encode('utf8'))
-    response['Content-Disposition'] = "attachment; filename=\"%s\"; filename*=utf-8''%s" % (filename, filename_encoded)
+    response['Content-Disposition'] = "attachment; filename=\"%s\"; filename*=utf-8''%s" % (filename, filename)
     f.close()
     return response
 
@@ -197,9 +196,8 @@ def serve_download_helper(request, download_link_uuid, extract_audio=False):
     file_path = download_link.get_file_path(extract_audio)
     url = download_link.url
     _, extension = os.path.splitext(file_path)
-    # title_sanitized = download_link.get_url_friendly_title()
-    # filename = title_sanitized + extension
-    filename = download_link.title + extension
+    title_sanitized = download_link.get_url_friendly_title()
+    filename = title_sanitized + extension
     try:
         response = serve_file_helper(file_path, filename)
     except IOError:
