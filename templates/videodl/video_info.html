@@ -16,7 +16,9 @@ $(function(){
 
 {% block content %}
 <div class="text-center">
-  <img src="{{ video_thumbnail }}" alt="{{ download_link.title }}" class="img-thumbnail">
+  {% if video_thumbnail %}
+    <img src="{{ video_thumbnail }}" alt="{{ download_link.title }}" class="img-thumbnail">
+  {% endif %}
 
   <form action="{% url 'prepare_download_redirect' download_link_uuid=download_link.uuid %}" method="post"
     id="video_info_download_form" class="form-inline" role="form">{% csrf_token %}
