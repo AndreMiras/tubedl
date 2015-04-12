@@ -20,6 +20,7 @@ YDL_OPTIONS = {
     # 'outtmpl': DOWNLOAD_DIR + u'%(title)s-%(id)s.%(ext)s',
     'outtmpl': DOWNLOAD_DIR + u'%(id)s.%(ext)s',
     'keepvideo': True,
+    'noplaylist': True,
 }
 
 def supported_sites(request):
