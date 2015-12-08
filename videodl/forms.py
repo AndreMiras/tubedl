@@ -21,6 +21,8 @@ class DownloadForm(forms.ModelForm):
         # Adds Twitter Bootstrap 3 "form-control" class.
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+        # large input
+        self.fields['url'].widget.attrs['class'] += ' input-lg'
 
 
     def clean_url(self):
