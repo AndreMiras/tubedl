@@ -36,8 +36,10 @@
         <div class="collapse navbar-collapse">
           {% url 'home' as home %}
           {% url 'contact' as contact %}
+          {% url 'supported_sites' as supported_sites %}
           <ul class="nav navbar-nav">
             <li class="{% active home %}"><a href="{{ home }}"><i class="fa fa-home"></i> Home</a></li>
+            <li class="{% active supported_sites %}"><a href="{{ supported_sites }}"><i class="fa fa-info-circle"></i> Supported sites</a></li>
             <li><a href="https://github.com/AndreMiras/tubedl"><i class="fa fa-github-alt"></i> About</a></li>
             <li class="{% active contact %}"><a href="{{ contact }}"><i class="fa fa-envelope"></i> Contact</a></li>
           </ul>
