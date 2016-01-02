@@ -39,3 +39,17 @@ def contact(request):
         'form': form,
     }
     return render(request, 'contact.html', data)
+
+def error404(request):
+    """
+    Simply renders 404 error template for testing purpose.
+    """
+    data = {}
+    return render(request, '404.html', data)
+
+def error500(request):
+    """
+    Simply renders 500 error template for testing purpose.
+    """
+    data = {}
+    return render(request, '500.html', data)
