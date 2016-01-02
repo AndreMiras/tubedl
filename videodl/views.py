@@ -103,7 +103,8 @@ def video_info(request, download_link_uuid):
             request,
             "Could not download your video.\n" +
             "Exception was: %s" % (ex.message))
-        return HttpResponseRedirect(reverse('home'))
+        # raises the exception so the admins get notified
+        raise
     video_thumbnail = info.get('thumbnail')
     video_title = info.get('title')
     download_link.title = video_title
@@ -180,7 +181,8 @@ def prepare_download_redirect(request, download_link_uuid):
                     request,
                     "Could not download your video.\n" +
                     "Exception was: %s" % (ex.message))
-                return HttpResponseRedirect(reverse('home'))
+                # raises the exception so the admins get notified
+                raise
             if audio_only:
                 download_redirect_url = reverse('serve_audio_download',
                     kwargs={ 'download_link_uuid': download_link_uuid })
