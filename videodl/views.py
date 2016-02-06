@@ -21,7 +21,7 @@ YDL_OPTIONS = {
     'outtmpl': DOWNLOAD_DIR + u'%(id)s.%(ext)s',
     'keepvideo': True,
     'noplaylist': True,
-    'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]',
+    'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best',
 }
 
 def supported_sites(request):
