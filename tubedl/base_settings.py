@@ -44,6 +44,7 @@ DJANGO_CORE_APP = (
 
 THIRDPARTY_APP = (
     'crispy_forms',
+    'django_extensions',
 )
 
 CUSTOM_APPS = (
