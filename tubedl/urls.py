@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
 admin.autodiscover()
+handler500 = 'tubedl.views.custom_500'
 
 urlpatterns = patterns('',
     url(r'^$', 'tubedl.views.home', name='home'),

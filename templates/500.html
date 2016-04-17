@@ -3,5 +3,23 @@
 {% block title %}Server Error (500){% endblock %}
 
 {% block content %}
-Server error, administrator notified.
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Server Error (500)</h3>
+  </div>
+  <div class="panel-body">
+    Server error, administrator notified.
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Error details</h3>
+  </div>
+  <div class="panel-body">
+    <p>{{ exception_type }}</p>
+    <p>{{ exception_value }}</p>
+  </div>
+</div>
 {% endblock content %}

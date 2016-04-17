@@ -1,6 +1,9 @@
+import sys
 from django.contrib import messages
 from django.shortcuts import render
 from django.core.mail import send_mail
+from django.http import HttpResponseServerError
+from django.template import loader, Context
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -53,3 +56,14 @@ def error500(request):
     """
     data = {}
     return render(request, '500.html', data)
+
+def custom_500(request):
+    t = loader.get_template('500.html')
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    data = {
+        'exception_type': str(exc_type),
+        'exception_value': exc_value,
+    }
+    return HttpResponseServerError(
+        t.render(Context(data)))
+
