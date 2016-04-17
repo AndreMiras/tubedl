@@ -15,7 +15,11 @@ def bootstrap_tags(value):
 
 @register.simple_tag(takes_context=True)
 def active(context, pattern):
-    request = context['request']
+    try:
+        request = context['request']
+    except KeyError:
+        # fails silently
+        return ''
     css_class = ""
     if pattern == '/':
         if pattern == request.path:
