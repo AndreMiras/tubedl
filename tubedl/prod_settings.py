@@ -9,11 +9,11 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 import dj_database_url
 DATABASES['default'] =  dj_database_url.config()
 
-ADMINS = (
-    (os.environ['ADMIN_NAME'], os.environ['ADMIN_EMAIL']),
-)
-
-MANAGERS = ADMINS
+if os.environ.get('ADMIN_NAME') and os.environ.get('ADMIN_EMAIL'):
+    ADMINS = (
+        (os.environ['ADMIN_NAME'], os.environ['ADMIN_EMAIL']),
+    )
+    MANAGERS = ADMINS
 
 EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', '')
 EMAIL_HOST= 'smtp.sendgrid.net'
