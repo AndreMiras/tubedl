@@ -5,6 +5,10 @@
   "keywords": ["Python", "youtube-dl", "Django"],
   "env": {
     "PRODUCTION": "True"
+    "DJANGO_SECRET_KEY": {
+      "description": "A randomly generated secret to secure your Django installation",
+      "generator": "secret"
+    }
   },
   "scripts": {
     "postdeploy": "sh -c 'python manage.py syncdb --noinput; python manage.py migrate --noinput'"
