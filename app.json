@@ -11,6 +11,7 @@
       "generator": "secret"
     }
   },
+  "addons": ["heroku-postgresql"],
   "scripts": {
     "postdeploy": "sh -c 'python manage.py syncdb --noinput; python manage.py migrate --noinput'"
   }
