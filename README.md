@@ -5,6 +5,8 @@ tubedl
 Online video downloader <http://tubedl.herokuapp.com/>
 --------------
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 Tube DL is a website for downloading videos from sites like YouTube.com.
 It is built on top of [rg3/youtube-dl](https://github.com/rg3/youtube-dl) and Django framework.
 
