@@ -3,6 +3,9 @@
   "description": "An online video downloader built with Python, on top of youtube-dl and Django",
   "repository": "https://github.com/AndreMiras/tubedl",
   "keywords": ["Python", "youtube-dl", "Django"],
+  "env": {
+    "PRODUCTION": "True"
+  },
   "scripts": {
     "postdeploy": "sh -c 'python manage.py syncdb --noinput; python manage.py migrate --noinput'"
   }
