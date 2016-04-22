@@ -1,0 +1,6 @@
+{
+  "name": "Online video downloader",
+  "description": "An online video downloader built with Python, on top of youtube-dl and Django",
+  "repository": "https://github.com/AndreMiras/tubedl",
+  "keywords": ["Python", "youtube-dl", "Django"]
+}
