@@ -4,7 +4,7 @@
   "repository": "https://github.com/AndreMiras/tubedl",
   "keywords": ["Python", "youtube-dl", "Django"],
   "env": {
-    "PRODUCTION": "True"
+    "PRODUCTION": "True",
     "DJANGO_SECRET_KEY": {
       "description": "A randomly generated secret to secure your Django installation",
       "generator": "secret"
