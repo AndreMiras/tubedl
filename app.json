@@ -4,6 +4,7 @@
   "repository": "https://github.com/AndreMiras/tubedl",
   "keywords": ["Python", "youtube-dl", "Django"],
   "env": {
+    "BUILDPACK_URL": "https://github.com/ddollar/heroku-buildpack-multi.git",
     "PRODUCTION": "True",
     "DJANGO_SECRET_KEY": {
       "description": "A randomly generated secret to secure your Django installation",
