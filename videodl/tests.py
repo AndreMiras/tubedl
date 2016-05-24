@@ -1,6 +1,6 @@
 from django.test import TestCase
-from django.test import Client
 from django.core.urlresolvers import reverse
+
 
 class VideoDlTestCase(TestCase):
     def setUp(self):
@@ -21,7 +21,7 @@ class VideoDlTestCase(TestCase):
         download_form_url = reverse('download_form')
         response = self.client.post(
             download_form_url,
-            { 'url': video_url },
+            {'url': video_url},
             follow=True)
         # verifies the status_code is OK
         self.assertEqual(response.status_code, 200)
