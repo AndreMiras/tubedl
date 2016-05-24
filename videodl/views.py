@@ -149,7 +149,7 @@ def serve_file_helper(file_path, filename=None):
     url = urllib.pathname2url(file_path)
     mimetype, encoding = mime.guess_type(url)
     f = open(file_path)
-    response = HttpResponse(f.read(), content_type = mimetype)
+    response = HttpResponse(f.read(), content_type=mimetype)
     response['Content-Length'] = os.path.getsize(file_path)
     # how-to-encode-the-filename-parameter-of-content-disposition-header-in-http
     # http://stackoverflow.com/a/20933751
