@@ -128,9 +128,12 @@ def download_form(request):
         if form.is_valid():
             url = form.cleaned_data['url']
             # saves the download info as a DownloadLink for later reshare
-            download_link, created = DownloadLink.objects.get_or_create(url=url)
+            download_link, created = \
+                DownloadLink.objects.get_or_create(url=url)
             # messages.success(request, 'Your download will start shortly.')
-            return HttpResponseRedirect(reverse('video_info', kwargs={'download_link_uuid': download_link.uuid}))
+            return HttpResponseRedirect(
+                reverse('video_info',
+                        kwargs={'download_link_uuid': download_link.uuid}))
     else:
         form = DownloadForm()
     data = {
@@ -151,9 +154,11 @@ def serve_file_helper(file_path, filename=None):
     f = open(file_path)
     response = HttpResponse(f.read(), content_type=mimetype)
     response['Content-Length'] = os.path.getsize(file_path)
-    # how-to-encode-the-filename-parameter-of-content-disposition-header-in-http
+    # encodes the filename parameter of Content-Disposition header
     # http://stackoverflow.com/a/20933751
-    response['Content-Disposition'] = "attachment; filename=\"%s\"; filename*=utf-8''%s" % (filename, filename)
+    response['Content-Disposition'] = \
+        "attachment; filename=\"%s\"; filename*=utf-8''%s" % \
+        (filename, filename)
     f.close()
     return response
 
