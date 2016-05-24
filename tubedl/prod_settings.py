@@ -1,4 +1,5 @@
 from base_settings import *
+import dj_database_url
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -6,7 +7,6 @@ TEMPLATE_DEBUG = DEBUG
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # Parse database configuration from $DATABASE_URL
-import dj_database_url
 DATABASES['default'] = dj_database_url.config()
 
 if os.environ.get('ADMIN_NAME') and os.environ.get('ADMIN_EMAIL'):
