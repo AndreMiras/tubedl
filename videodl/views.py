@@ -4,8 +4,6 @@ from mimetypes import MimeTypes
 from django.http import Http404, JsonResponse
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
-from django.core.mail import send_mail
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from youtube_dl import YoutubeDL, extractor
@@ -101,7 +99,7 @@ def video_info(request, download_link_uuid):
     url = download_link.url
     # restores form state from session for user convenience
     audio_only = request.session.get('audio_only')
-    initial = { 'audio_only': audio_only }
+    initial = {'audio_only': audio_only}
     form = DownloadFormat(initial=initial)
     try:
         info = extract_info_helper(url, audio_only)
@@ -132,7 +130,7 @@ def download_form(request):
             # saves the download info as a DownloadLink for later reshare
             download_link, created = DownloadLink.objects.get_or_create(url=url)
             # messages.success(request, 'Your download will start shortly.')
-            return HttpResponseRedirect(reverse('video_info', kwargs={ 'download_link_uuid': download_link.uuid }))
+            return HttpResponseRedirect(reverse('video_info', kwargs={'download_link_uuid': download_link.uuid}))
     else:
         form = DownloadForm()
     data = {
@@ -195,21 +193,20 @@ def prepare_download_redirect(request, download_link_uuid):
                 raise
             if audio_only:
                 download_redirect_url = reverse('serve_audio_download',
-                    kwargs={ 'download_link_uuid': download_link_uuid })
+                    kwargs={'download_link_uuid': download_link_uuid})
             else:
                 download_redirect_url = reverse('serve_video_download',
-                    kwargs={ 'download_link_uuid': download_link_uuid })
-            data = { "download_redirect_url": download_redirect_url }
+                    kwargs={'download_link_uuid': download_link_uuid})
+            data = {"download_redirect_url": download_redirect_url}
             # return HttpResponseRedirect(download_redirect_url)
             return JsonResponse(data)
     return HttpResponseRedirect(reverse('video_info',
-        kwargs={ 'download_link_uuid': download_link_uuid }))
+        kwargs={'download_link_uuid': download_link_uuid}))
 
 
 def serve_download_helper(request, download_link_uuid, extract_audio=False):
     download_link = get_object_or_404(DownloadLink, uuid=download_link_uuid)
     file_path = download_link.get_file_path(extract_audio)
-    url = download_link.url
     _, extension = os.path.splitext(file_path)
     title_sanitized = download_link.get_url_friendly_title()
     filename = title_sanitized + extension
