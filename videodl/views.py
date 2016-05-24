@@ -58,7 +58,7 @@ def progress_hook(d):
 
 
 def extract_file_path_helper(id, ext):
-    file_path = YDL_OPTIONS['outtmpl'] % ({ 'id': id, 'ext': ext })
+    file_path = YDL_OPTIONS['outtmpl'] % ({'id': id, 'ext': ext})
     return file_path
 
 
