@@ -35,7 +35,8 @@ def contact(request):
             if cc_myself:
                 recipients.append(sender)
             send_mail(subject, message, sender, recipients)
-            messages.success(request, 'Message sent, redirecting to home page.')
+            messages.success(
+                    request, 'Message sent, redirecting to home page.')
             return HttpResponseRedirect(reverse('home'))
     else:
         form = ContactForm()
