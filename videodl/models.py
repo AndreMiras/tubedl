@@ -11,7 +11,8 @@ class DownloadLink(models.Model):
     title = models.CharField(max_length=255, blank=True, default="")
     url = models.URLField(max_length=255)
     created = models.DateTimeField(auto_now=True)
-    last_download = models.DateTimeField(auto_now_add=True) # whenever views is incremented
+    # whenever views is incremented
+    last_download = models.DateTimeField(auto_now_add=True)
     views = models.PositiveIntegerField(default=0)
     video_path = models.CharField(max_length=255, blank=True, default="")
     audio_path = models.CharField(max_length=255, blank=True, default="")
