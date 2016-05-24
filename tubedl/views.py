@@ -20,6 +20,7 @@ def home(request):
     }
     return render(request, 'videodl/download_form.html', data)
 
+
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -43,6 +44,7 @@ def contact(request):
     }
     return render(request, 'contact.html', data)
 
+
 def error404(request):
     """
     Simply renders 404 error template for testing purpose.
@@ -50,12 +52,14 @@ def error404(request):
     data = {}
     return render(request, '404.html', data)
 
+
 def error500(request):
     """
     Simply renders 500 error template for testing purpose.
     """
     data = {}
     return render(request, '500.html', data)
+
 
 def custom_500(request):
     t = loader.get_template('500.html')
@@ -66,4 +70,3 @@ def custom_500(request):
     }
     return HttpResponseServerError(
         t.render(Context(data)))
-
