@@ -2,6 +2,7 @@ import os
 import urllib2
 from django.core.management.base import NoArgsCommand
 
+
 class Command(NoArgsCommand):
     help = 'Pings os.environ["HOSTNAME"] to keep dyno alive.'
 
