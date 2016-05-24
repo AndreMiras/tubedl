@@ -197,14 +197,14 @@ def prepare_download_redirect(request, download_link_uuid):
                 # raises the exception so the admins get notified
                 raise
             if audio_only:
-                redirect_url = reverse(
+                download_redirect_url = reverse(
                         'serve_audio_download',
                         kwargs={'download_link_uuid': download_link_uuid})
             else:
-                redirect_url = reverse(
+                download_redirect_url = reverse(
                         'serve_video_download',
                         kwargs={'download_link_uuid': download_link_uuid})
-            data = {"redirect_url": redirect_url}
+            data = {"download_redirect_url": download_redirect_url}
             return JsonResponse(data)
     return HttpResponseRedirect(reverse('video_info',
                                 kwargs={
