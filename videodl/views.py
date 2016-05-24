@@ -24,6 +24,7 @@ YDL_OPTIONS = {
     'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best',
 }
 
+
 def supported_sites(request):
     """
     Returns the list of support sites.
@@ -34,6 +35,7 @@ def supported_sites(request):
         "sites": sites,
     }
     return render(request, 'videodl/supported_sites.html', data)
+
 
 # This one is being pulled by $.ajax in the js.
 def get_progress(request):
@@ -47,6 +49,7 @@ def get_progress(request):
     }
     return JsonResponse(data)
 
+
 def progress_hook(d):
     if d['status'] == 'downloading':
         print "Downloading"
@@ -55,9 +58,11 @@ def progress_hook(d):
     elif d['status'] == 'finished':
         print "Done downloading, now converting ..."
 
+
 def extract_file_path_helper(id, ext):
     file_path = YDL_OPTIONS['outtmpl'] % ({ 'id': id, 'ext': ext })
     return file_path
+
 
 def extract_info_helper(url, extract_audio):
     with YoutubeDL(YDL_OPTIONS) as ydl:
@@ -66,6 +71,7 @@ def extract_info_helper(url, extract_audio):
         if extract_audio:
             info['ext'] = 'mp3'
         return info
+
 
 def download_on_server(url, extract_audio=False):
     """
@@ -85,6 +91,7 @@ def download_on_server(url, extract_audio=False):
         file_path = extract_file_path_helper(info['id'], info['ext'])
         ydl.download([url])
         return (file_path, info)
+
 
 def video_info(request, download_link_uuid):
     """
@@ -116,6 +123,7 @@ def video_info(request, download_link_uuid):
     }
     return render(request, 'videodl/video_info.html', data)
 
+
 def download_form(request):
     if request.method == 'POST':
         form = DownloadForm(request.POST)
@@ -131,6 +139,7 @@ def download_form(request):
         'form': form,
     }
     return render(request, 'videodl/download_form.html', data)
+
 
 def serve_file_helper(file_path, filename=None):
     """
@@ -149,6 +158,7 @@ def serve_file_helper(file_path, filename=None):
     response['Content-Disposition'] = "attachment; filename=\"%s\"; filename*=utf-8''%s" % (filename, filename)
     f.close()
     return response
+
 
 def prepare_download_redirect(request, download_link_uuid):
     """
@@ -195,6 +205,7 @@ def prepare_download_redirect(request, download_link_uuid):
     return HttpResponseRedirect(reverse('video_info',
         kwargs={ 'download_link_uuid': download_link_uuid }))
 
+
 def serve_download_helper(request, download_link_uuid, extract_audio=False):
     download_link = get_object_or_404(DownloadLink, uuid=download_link_uuid)
     file_path = download_link.get_file_path(extract_audio)
@@ -208,11 +219,12 @@ def serve_download_helper(request, download_link_uuid, extract_audio=False):
         raise Http404
     return response
 
+
 def serve_video_download(request, download_link_uuid):
     extract_audio = False
     return serve_download_helper(request, download_link_uuid, extract_audio)
 
+
 def serve_audio_download(request, download_link_uuid):
     extract_audio = True
     return serve_download_helper(request, download_link_uuid, extract_audio)
-
