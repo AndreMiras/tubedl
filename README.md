@@ -28,3 +28,14 @@ With Django development server:
 ```
 python manage.py runserver
 ```
+
+Tests
+--------------
+Using Django test framework only:
+```
+python manage.py test
+```
+Using Tox:
+```
+tox
+```
