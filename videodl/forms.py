@@ -27,8 +27,8 @@ class DownloadForm(forms.ModelForm):
 
     def clean_url(self):
         """
-        - verifies the URL exists
         - verifies at least one extractor recognizes it
+        - verifies the URL exists
         """
         url = self.cleaned_data['url']
         extractors = list(extractor._ALL_CLASSES)
@@ -36,9 +36,10 @@ class DownloadForm(forms.ModelForm):
         extractors.remove(extractor.generic.GenericIE)
         if True not in [x.suitable(url) for x in extractors]:
             raise forms.ValidationError("URL not supported.")
+        # verifies the URL exists
         try:
-            content = urllib2.urlopen(url)
-        except urllib2.URLError as e:
+            urllib2.urlopen(url)
+        except urllib2.URLError:
             raise forms.ValidationError("The provided URL does not exist.")
         return url
 
