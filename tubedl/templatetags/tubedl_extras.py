@@ -4,6 +4,7 @@ from django.template.defaultfilters import stringfilter
 
 register = template.Library()
 
+
 @register.filter
 @stringfilter
 def bootstrap_tags(value):
@@ -20,7 +21,6 @@ def active(context, pattern):
     except KeyError:
         # fails silently
         return ''
-    css_class = ""
     if pattern == '/':
         if pattern == request.path:
             return 'active'
