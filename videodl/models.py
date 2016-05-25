@@ -1,6 +1,11 @@
-import urllib
 from django.db import models
 from uuidfield import UUIDField
+try:
+    # Python3
+    from  urllib.parse import quote
+except ImportError:
+    # fall back to Python2 urllib
+    from urllib import quote
 
 
 class DownloadLink(models.Model):
@@ -25,7 +30,7 @@ class DownloadLink(models.Model):
         return file_paths
 
     def get_url_friendly_title(self):
-        title_sanitized = urllib.quote(self.title.encode('utf8'))
+        title_sanitized = quote(self.title.encode('utf8'))
         return title_sanitized
 
     def get_file_path(self, audio=False):

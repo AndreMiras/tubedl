@@ -1,6 +1,5 @@
 from __future__ import print_function
 import os
-import urllib
 from mimetypes import MimeTypes
 from django.http import Http404, JsonResponse
 from django.contrib import messages
@@ -12,6 +11,12 @@ from youtube_dl.utils import DownloadError
 from youtube_dl.postprocessor.ffmpeg import FFmpegExtractAudioPP
 from videodl.forms import DownloadForm, DownloadFormat
 from videodl.models import DownloadLink
+try:
+    # Python3
+    from  urllib.request import pathname2url
+except ImportError:
+    # fall back to Python2 urllib
+    from urllib import pathname2url
 
 
 DOWNLOAD_DIR = "/tmp/"
@@ -151,7 +156,7 @@ def serve_file_helper(file_path, filename=None):
     if filename is None:
         filename = os.path.basename(file_path)
     mime = MimeTypes()
-    url = urllib.pathname2url(file_path)
+    url = pathname2url(file_path)
     mimetype, encoding = mime.guess_type(url)
     f = open(file_path)
     response = HttpResponse(f.read(), content_type=mimetype)
