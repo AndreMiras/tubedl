@@ -134,7 +134,8 @@ def download_form(request):
             # messages.success(request, 'Your download will start shortly.')
             return HttpResponseRedirect(
                 reverse('video_info',
-                        kwargs={'download_link_uuid': download_link.uuid}))
+                        kwargs={
+                            'download_link_uuid': download_link.uuid.hex}))
     else:
         form = DownloadForm()
     data = {
