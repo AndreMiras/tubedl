@@ -14,8 +14,13 @@ It is built on top of [rg3/youtube-dl](https://github.com/rg3/youtube-dl) and Dj
 
 Install
 --------------
+Production environment:
 ```
 pip install -r requirements.txt
+```
+Development environment:
+```
+pip install -r requirements/dev.txt
 ```
 
 Run
