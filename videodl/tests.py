@@ -1,5 +1,7 @@
 from django.test import TestCase
+from django.http import JsonResponse
 from django.core.urlresolvers import reverse
+from videodl.models import DownloadLink
 
 
 class VideoDlTestCase(TestCase):
@@ -63,3 +65,38 @@ class VideoDlTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         # verifies the form error message
         self.assertContains(response, 'The provided URL does not exist')
+
+    def test_prepare_download_redirect(self):
+        """
+        Go through the whole downloading process with a short video.
+        """
+        video_url = '' + \
+            'https://www.youtube.com' + \
+            '/watch?v=t3NZusaDt1M'
+        # no DownloadLink object for this URL in the database before starting
+        self.assertEqual(
+            DownloadLink.objects.filter(url=video_url).count(),
+            0)
+        download_form_url = reverse('download_form')
+        response = self.client.post(
+            download_form_url,
+            {'url': video_url},
+            follow=True)
+        # verifies the status_code is OK
+        self.assertEqual(response.status_code, 200)
+        # verifies the title could actually be extracted
+        self.assertContains(response, 'Double Exposure Effect  - Short Video')
+        # the DownloadLink object should have been created
+        download_link = DownloadLink.objects.get(url=video_url)
+        # use the UUID to go to the prepare_download_redirect page
+        prepare_download_redirect_url = reverse('prepare_download_redirect',
+            kwargs={'download_link_uuid': download_link.uuid.hex})
+        response = self.client.post(
+            prepare_download_redirect_url,
+            {'audio_only': False})
+        # verifies the status_code is OK
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(isinstance(response, JsonResponse))
+        # the JSON response should give the download_redirect_url
+        self.assertContains(response, 'download_redirect_url')
+        self.assertContains(response, download_link.uuid.hex)
