@@ -26,7 +26,7 @@ class VideoDlTestCase(TestCase):
         # verifies the status_code is OK
         self.assertEqual(response.status_code, 200)
         # verifies the info e.g. title could actually be extracted
-        self.assertTrue('Mon premier combat' in response.content)
+        self.assertContains(response, 'Mon premier combat')
 
     def test_url_not_supported(self):
         """
@@ -44,4 +44,22 @@ class VideoDlTestCase(TestCase):
         # verifies the status_code is OK
         self.assertEqual(response.status_code, 200)
         # verifies the form error message
-        self.assertTrue('URL not supported.' in response.content)
+        self.assertContains(response, 'URL not supported.')
+
+    def test_url_not_found(self):
+        """
+        Page not found shoudln't crash the application,
+        but display an error message.
+        """
+        video_url = '' + \
+            'https://www.youtube.com' + \
+            '/watch?v=foobar'
+        download_form_url = reverse('download_form')
+        response = self.client.post(
+            download_form_url,
+            {'url': video_url},
+            follow=True)
+        # verifies the status_code is OK
+        self.assertEqual(response.status_code, 200)
+        # verifies the form error message
+        self.assertContains(response, 'The provided URL does not exist')
