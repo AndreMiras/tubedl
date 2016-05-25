@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import urllib
 from mimetypes import MimeTypes
@@ -50,11 +51,11 @@ def get_progress(request):
 
 def progress_hook(d):
     if d['status'] == 'downloading':
-        print "Downloading"
+        print("Downloading")
         # d['downloaded_bytes']
         # d['total_bytes']
     elif d['status'] == 'finished':
-        print "Done downloading, now converting ..."
+        print("Done downloading, now converting ...")
 
 
 def extract_file_path_helper(id, ext):
