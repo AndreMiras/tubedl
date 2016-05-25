@@ -1,7 +1,14 @@
-import urllib2
 from youtube_dl import extractor
 from django import forms
 from videodl.models import DownloadLink
+try:
+    # Python3
+    from urllib.request import urlopen
+    from urllib.error import URLError
+except ImportError:
+    # fall back to Python2 urllib2
+    from urllib2 import urlopen
+    from urllib2 import URLError
 
 
 class DownloadForm(forms.ModelForm):
@@ -37,8 +44,8 @@ class DownloadForm(forms.ModelForm):
             raise forms.ValidationError("URL not supported.")
         # verifies the URL exists
         try:
-            urllib2.urlopen(url)
-        except urllib2.URLError:
+            urlopen(url)
+        except URLError:
             raise forms.ValidationError("The provided URL does not exist.")
         return url
 
