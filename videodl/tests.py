@@ -27,3 +27,21 @@ class VideoDlTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         # verifies the info e.g. title could actually be extracted
         self.assertTrue('Mon premier combat' in response.content)
+
+    def test_url_not_supported(self):
+        """
+        Not supported URLs shoudln't crash the application,
+        but display an error message.
+        """
+        video_url = '' + \
+            'http://foobar.com' + \
+            '/video123/'
+        download_form_url = reverse('download_form')
+        response = self.client.post(
+            download_form_url,
+            {'url': video_url},
+            follow=True)
+        # verifies the status_code is OK
+        self.assertEqual(response.status_code, 200)
+        # verifies the form error message
+        self.assertTrue('URL not supported.' in response.content)
