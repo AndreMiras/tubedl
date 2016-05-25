@@ -13,7 +13,7 @@ from videodl.forms import DownloadForm, DownloadFormat
 from videodl.models import DownloadLink
 try:
     # Python3
-    from  urllib.request import pathname2url
+    from urllib.request import pathname2url
 except ImportError:
     # fall back to Python2 urllib
     from urllib import pathname2url

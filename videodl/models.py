@@ -2,7 +2,7 @@ from django.db import models
 from uuidfield import UUIDField
 try:
     # Python3
-    from  urllib.parse import quote
+    from urllib.parse import quote
 except ImportError:
     # fall back to Python2 urllib
     from urllib import quote
