@@ -66,7 +66,7 @@ class VideoDlTestCase(TestCase):
         # verifies the form error message
         self.assertContains(response, 'The provided URL does not exist')
 
-    def test_prepare_download_redirect(self):
+    def test_download_process(self):
         """
         Go through the whole downloading process with a short video.
         """
@@ -89,7 +89,8 @@ class VideoDlTestCase(TestCase):
         # the DownloadLink object should have been created
         download_link = DownloadLink.objects.get(url=video_url)
         # use the UUID to go to the prepare_download_redirect page
-        prepare_download_redirect_url = reverse('prepare_download_redirect',
+        prepare_download_redirect_url = reverse(
+            'prepare_download_redirect',
             kwargs={'download_link_uuid': download_link.uuid.hex})
         response = self.client.post(
             prepare_download_redirect_url,
@@ -100,3 +101,16 @@ class VideoDlTestCase(TestCase):
         # the JSON response should give the download_redirect_url
         self.assertContains(response, 'download_redirect_url')
         self.assertContains(response, download_link.uuid.hex)
+        # accesses serve_video_download url
+        serve_video_download_url = reverse(
+            'serve_video_download',
+            kwargs={'download_link_uuid': download_link.uuid.hex})
+        response = self.client.get(serve_video_download_url)
+        # verifies the status_code is OK
+        self.assertEqual(response.status_code, 200)
+        # verifies there is an attachment
+        self.assertTrue(
+            'attachment; filename=' in response['Content-Disposition'])
+        self.assertTrue('.mp4' in response['Content-Disposition'])
+        # checking the video size
+        self.assertEqual(len(response.content), 9866796)
