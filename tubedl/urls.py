@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.views.generic.base import RedirectView
 from django.contrib import admin
 
 admin.autodiscover()
@@ -7,6 +8,9 @@ handler500 = 'tubedl.views.custom_500'
 
 urlpatterns = patterns(
     '',
+    # some browsers assume favicon.ico is present in the root directory
+    url(r'^favicon\.ico$',
+        RedirectView.as_view(url='/static/img/favicon.ico', permanent=True)),
     url(r'^$', 'tubedl.views.home', name='home'),
     url(r'^contact/$', 'tubedl.views.contact', name='contact'),
     url(r'^error404/$', 'tubedl.views.error404', name='error404'),
