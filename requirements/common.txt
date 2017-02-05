@@ -1,5 +1,5 @@
 Django==1.8.12
-youtube-dl==2016.07.02
+youtube-dl==2017.2.4.1
 django-uuidfield==0.5.0
 django-crispy-forms==1.4.0
 django-extensions==1.6.1
