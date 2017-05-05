@@ -3,3 +3,4 @@ staticfiles
 *.swp
 db.sqlite3
 venv/
+.tox/
