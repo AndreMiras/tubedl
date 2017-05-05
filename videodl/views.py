@@ -136,6 +136,8 @@ def video_info(request, download_link_uuid):
     except DownloadError as ex:
         info = {}
         handle_download_exception(request, ex)
+        # then redirects to the home page
+        return HttpResponseRedirect(reverse('home'))
     video_thumbnail = info.get('thumbnail')
     data = {
         'form': form,
