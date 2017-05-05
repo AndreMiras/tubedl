@@ -103,14 +103,15 @@ def handle_download_exception(request, ex):
     Verifies if the error is known and can be handled gracefully.
     """
     fail_gracefully = False
+    ex_message = str(ex)
     messages.error(
         request,
         "Could not download your video.\n" +
-        "Exception was: %s" % (ex.message))
+        "Exception was: %s" % (ex_message))
     # verifies if the error is known and can be handled gracefully
-    if "This video does not exist." in ex.message:
+    if "This video does not exist." in ex_message:
         fail_gracefully = True
-    elif "Incomplete YouTube ID" in ex.message:
+    elif "Incomplete YouTube ID" in ex_message:
         fail_gracefully = True
     # raises the exception so the admins get notified
     if not fail_gracefully:
@@ -216,7 +217,7 @@ def prepare_download_redirect(request, download_link_uuid):
                 messages.error(
                     request,
                     "Could not download your video.\n" +
-                    "Exception was: %s" % (ex.message))
+                    "Exception was: %s" % str(ex))
                 # raises the exception so the admins get notified
                 raise
             if audio_only:
