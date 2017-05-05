@@ -97,6 +97,26 @@ def download_on_server(url, extract_audio=False):
         return (file_path, info)
 
 
+def handle_download_exception(request, ex):
+    """
+    Handles DownloadError exception.
+    Verifies if the error is known and can be handled gracefully.
+    """
+    fail_gracefully = False
+    messages.error(
+        request,
+        "Could not download your video.\n" +
+        "Exception was: %s" % (ex.message))
+    # verifies if the error is known and can be handled gracefully
+    if "This video does not exist." in ex.message:
+        fail_gracefully = True
+    elif "Incomplete YouTube ID" in ex.message:
+        fail_gracefully = True
+    # raises the exception so the admins get notified
+    if not fail_gracefully:
+        raise
+
+
 def video_info(request, download_link_uuid):
     """
     Retrieves video info and saves it to server database.
@@ -109,17 +129,13 @@ def video_info(request, download_link_uuid):
     form = DownloadFormat(initial=initial)
     try:
         info = extract_info_helper(url, audio_only)
+        video_title = info.get('title')
+        download_link.title = video_title
+        download_link.save()
     except DownloadError as ex:
-        messages.error(
-            request,
-            "Could not download your video.\n" +
-            "Exception was: %s" % (ex.message))
-        # raises the exception so the admins get notified
-        raise
+        info = {}
+        handle_download_exception(request, ex)
     video_thumbnail = info.get('thumbnail')
-    video_title = info.get('title')
-    download_link.title = video_title
-    download_link.save()
     data = {
         'form': form,
         'video_thumbnail': video_thumbnail,

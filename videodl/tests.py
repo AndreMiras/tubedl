@@ -48,9 +48,9 @@ class VideoDlTestCase(TestCase):
         # verifies the form error message
         self.assertContains(response, 'URL not supported.')
 
-    def test_url_not_found(self):
+    def test_incomplete_youtube_id(self):
         """
-        Page not found shoudln't crash the application,
+        Video with a wrong ID shoudln't crash the application,
         but display an error message.
         """
         video_url = '' + \
@@ -64,7 +64,25 @@ class VideoDlTestCase(TestCase):
         # verifies the status_code is OK
         self.assertEqual(response.status_code, 200)
         # verifies the form error message
-        self.assertContains(response, 'The provided URL does not exist')
+        self.assertContains(response, 'Incomplete YouTube ID')
+
+    def test_url_not_found(self):
+        """
+        Video not found shoudln't crash the application,
+        but display an error message.
+        """
+        video_url = '' + \
+            'https://www.youtube.com' + \
+            '/watch?v=foofubarfoo'
+        download_form_url = reverse('download_form')
+        response = self.client.post(
+            download_form_url,
+            {'url': video_url},
+            follow=True)
+        # verifies the status_code is OK
+        self.assertEqual(response.status_code, 200)
+        # verifies the form error message
+        self.assertContains(response, 'This video does not exist.')
 
     def test_download_process(self):
         """
