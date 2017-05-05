@@ -131,4 +131,4 @@ class VideoDlTestCase(TestCase):
             'attachment; filename=' in response['Content-Disposition'])
         self.assertTrue('.mp4' in response['Content-Disposition'])
         # checking the video size
-        self.assertEqual(len(response.content), 9866796)
+        self.assertEqual(len(response.content), 9866812)
