@@ -1,14 +1,15 @@
 import sys
-from django.contrib import messages
-from django.shortcuts import render
-from django.core.mail import send_mail
-from django.http import HttpResponseServerError
-from django.template import loader, Context
+
 from django.conf import settings
+from django.contrib import messages
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
-from videodl.forms import DownloadForm
+from django.http import HttpResponseRedirect, HttpResponseServerError
+from django.shortcuts import render
+from django.template import Context, loader
+
 from tubedl.forms import ContactForm
+from videodl.forms import DownloadForm
 
 
 def home(request):

@@ -1,16 +1,20 @@
 from __future__ import print_function
+
 import os
 from mimetypes import MimeTypes
-from django.http import Http404, JsonResponse
+
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import (Http404, HttpResponse, HttpResponseRedirect,
+                         JsonResponse)
+from django.shortcuts import get_object_or_404, render
 from youtube_dl import YoutubeDL, extractor
-from youtube_dl.utils import DownloadError
 from youtube_dl.postprocessor.ffmpeg import FFmpegExtractAudioPP
+from youtube_dl.utils import DownloadError
+
 from videodl.forms import DownloadForm, DownloadFormat
 from videodl.models import DownloadLink
+
 try:
     # Python3
     from urllib.request import pathname2url

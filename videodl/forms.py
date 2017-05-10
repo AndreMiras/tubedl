@@ -1,6 +1,8 @@
-from youtube_dl import extractor
 from django import forms
+from youtube_dl import extractor
+
 from videodl.models import DownloadLink
+
 try:
     # Python3
     from urllib.request import urlopen

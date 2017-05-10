@@ -1,5 +1,6 @@
-from .base_settings import *  # noqa
 import dj_database_url
+
+from .base_settings import *  # noqa
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG

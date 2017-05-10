@@ -1,5 +1,6 @@
 from django.db import models
 from uuidfield import UUIDField
+
 try:
     # Python3
     from urllib.parse import quote

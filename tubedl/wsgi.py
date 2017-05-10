@@ -8,9 +8,11 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
 import os
+
+from dj_static import Cling  # noqa
+from django.core.wsgi import get_wsgi_application  # noqa
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tubedl.settings")
 
-from django.core.wsgi import get_wsgi_application  # noqa
-from dj_static import Cling  # noqa
 
 application = Cling(get_wsgi_application())

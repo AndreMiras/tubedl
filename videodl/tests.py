@@ -1,6 +1,7 @@
-from django.test import TestCase
-from django.http import JsonResponse
 from django.core.urlresolvers import reverse
+from django.http import JsonResponse
+from django.test import TestCase
+
 from videodl.models import DownloadLink
 
 
