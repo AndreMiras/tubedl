@@ -132,4 +132,8 @@ class VideoDlTestCase(TestCase):
             'attachment; filename=' in response['Content-Disposition'])
         self.assertTrue('.mp4' in response['Content-Disposition'])
         # checking the video size
-        self.assertEqual(len(response.content), 9866812)
+        # it seems the size may vary slightly from one libav to the other
+        # so we round it
+        size_oct = len(response.content)
+        size_meg = round(float(size_oct)/pow(10, 6), 2)
+        self.assertEqual(size_meg, 9.87)
