@@ -1,9 +1,7 @@
-tubedl
-======
+# tubedl
 
 
-Online video downloader <http://tubedl.herokuapp.com/>
---------------
+## Online video downloader <http://tubedl.herokuapp.com/>
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
@@ -12,35 +10,32 @@ It is built on top of [rg3/youtube-dl](https://github.com/rg3/youtube-dl), the [
 
 ![Screenshot](https://raw.github.com/AndreMiras/tubedl/master/docs/tubedl.png)
 
-Install
---------------
+## Install
 Production environment:
-```
+```sh
 pip install -r requirements.txt
 ```
 Development environment:
-```
+```sh
 pip install -r requirements/dev.txt
 ```
 
-Run
---------------
+## Run
 With Gunicorn WSGI server:
-```
+```sh
 gunicorn tubedl.wsgi
 ```
 With Django development server:
-```
+```sh
 python manage.py runserver
 ```
 
-Tests
---------------
+## Tests
 Using Django test framework only:
-```
+```sh
 python manage.py test
 ```
 Using Tox:
-```
+```sh
 tox
 ```
