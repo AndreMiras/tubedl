@@ -19,6 +19,10 @@ Development environment:
 ```sh
 pip install -r requirements/dev.txt
 ```
+You also need ffmpeg or avconv for merging video/audio:
+```sh
+apt install ffmpeg
+```
 
 ## Run
 With Gunicorn WSGI server:
