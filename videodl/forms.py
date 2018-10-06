@@ -1,16 +1,10 @@
+from urllib.error import URLError
+from urllib.request import urlopen
+
 from django import forms
 from youtube_dl import extractor
 
 from videodl.models import DownloadLink
-
-try:
-    # Python3
-    from urllib.request import urlopen
-    from urllib.error import URLError
-except ImportError:
-    # fall back to Python2 urllib2
-    from urllib2 import urlopen
-    from urllib2 import URLError
 
 
 class DownloadForm(forms.ModelForm):
