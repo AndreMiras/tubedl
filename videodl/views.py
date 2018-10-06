@@ -98,19 +98,17 @@ def handle_download_exception(request, ex):
     Handles DownloadError exception.
     Verifies if the error is known and can be handled gracefully.
     """
-    fail_gracefully = False
     ex_message = str(ex)
     messages.error(
         request,
         "Could not download your video.\n" +
         "Exception was: %s" % (ex_message))
+    known_errors = set((
+        'This video is unavailable.',
+        'Incomplete YouTube ID',
+    ))
     # verifies if the error is known and can be handled gracefully
-    if "This video does not exist." in ex_message:
-        fail_gracefully = True
-    elif "Incomplete YouTube ID" in ex_message:
-        fail_gracefully = True
-    # raises the exception so the admins get notified
-    if not fail_gracefully:
+    if not any([error in ex_message for error in known_errors]):
         raise
 
 
@@ -130,7 +128,6 @@ def video_info(request, download_link_uuid):
         download_link.title = video_title
         download_link.save()
     except DownloadError as ex:
-        info = {}
         handle_download_exception(request, ex)
         # then redirects to the home page
         return HttpResponseRedirect(reverse('home'))

@@ -83,7 +83,7 @@ class VideoDlTestCase(TestCase):
         # verifies the status_code is OK
         self.assertEqual(response.status_code, 200)
         # verifies the form error message
-        self.assertContains(response, 'This video does not exist.')
+        self.assertContains(response, 'This video is unavailable.')
 
     def test_download_process(self):
         """
