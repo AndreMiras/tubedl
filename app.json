@@ -8,7 +8,9 @@
     "DJANGO_SECRET_KEY": {
       "description": "A randomly generated secret to secure your Django installation",
       "generator": "secret"
-    }
+    },
+    "SENTRY_PUBLIC_KEY": null,
+    "SENTRY_PROJECT_ID": null
   },
   "addons": ["heroku-postgresql"],
   "buildpacks": [
