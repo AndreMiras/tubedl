@@ -83,7 +83,7 @@ class VideoDlTestCase(TestCase):
         # verifies the status_code is OK
         self.assertEqual(response.status_code, 200)
         # verifies the form error message
-        self.assertContains(response, 'This video does not exist.')
+        self.assertContains(response, 'This video is unavailable.')
 
     def test_download_process(self):
         """
@@ -126,6 +126,10 @@ class VideoDlTestCase(TestCase):
             kwargs={'download_link_uuid': download_link.uuid.hex})
         response = self.client.get(serve_video_download_url)
         # verifies the status_code is OK
+        # if not and the /tmp/ directory contains two files with different
+        # formats e.g. t3NZusaDt1M.f140.m4a and t3NZusaDt1M.f137.mp4
+        # it's because you need ffmpeg or avconv for it to be merged into
+        # a single file
         self.assertEqual(response.status_code, 200)
         # verifies there is an attachment
         self.assertTrue(

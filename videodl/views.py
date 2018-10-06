@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import os
 from mimetypes import MimeTypes
+from urllib.request import pathname2url
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -15,17 +16,8 @@ from youtube_dl.utils import DownloadError
 from videodl.forms import DownloadForm, DownloadFormat
 from videodl.models import DownloadLink
 
-try:
-    # Python3
-    from urllib.request import pathname2url
-except ImportError:
-    # fall back to Python2 urllib
-    from urllib import pathname2url
-
-
 DOWNLOAD_DIR = "/tmp/"
 YDL_OPTIONS = {
-    # 'outtmpl': DOWNLOAD_DIR + u'%(title)s-%(id)s.%(ext)s',
     'outtmpl': DOWNLOAD_DIR + u'%(id)s.%(ext)s',
     'keepvideo': True,
     'noplaylist': True,
@@ -106,19 +98,17 @@ def handle_download_exception(request, ex):
     Handles DownloadError exception.
     Verifies if the error is known and can be handled gracefully.
     """
-    fail_gracefully = False
     ex_message = str(ex)
     messages.error(
         request,
         "Could not download your video.\n" +
         "Exception was: %s" % (ex_message))
+    known_errors = set((
+        'This video is unavailable.',
+        'Incomplete YouTube ID',
+    ))
     # verifies if the error is known and can be handled gracefully
-    if "This video does not exist." in ex_message:
-        fail_gracefully = True
-    elif "Incomplete YouTube ID" in ex_message:
-        fail_gracefully = True
-    # raises the exception so the admins get notified
-    if not fail_gracefully:
+    if not any([error in ex_message for error in known_errors]):
         raise
 
 
@@ -138,7 +128,6 @@ def video_info(request, download_link_uuid):
         download_link.title = video_title
         download_link.save()
     except DownloadError as ex:
-        info = {}
         handle_download_exception(request, ex)
         # then redirects to the home page
         return HttpResponseRedirect(reverse('home'))
@@ -249,8 +238,8 @@ def serve_download_helper(request, download_link_uuid, extract_audio=False):
     filename = title_sanitized + extension
     try:
         response = serve_file_helper(file_path, filename)
-    except IOError:
-        raise Http404
+    except IOError as e:
+        raise Http404(e)
     return response
 
 

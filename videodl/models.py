@@ -1,19 +1,15 @@
-from django.db import models
-from uuidfield import UUIDField
+import uuid
+from urllib.parse import quote
 
-try:
-    # Python3
-    from urllib.parse import quote
-except ImportError:
-    # fall back to Python2 urllib
-    from urllib import quote
+from django.db import models
 
 
 class DownloadLink(models.Model):
     """
     Share a download.
     """
-    uuid = UUIDField(auto=True)
+    uuid = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, blank=True, default="")
     url = models.URLField(max_length=255)
     created = models.DateTimeField(auto_now=True)
