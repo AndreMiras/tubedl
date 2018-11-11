@@ -4,3 +4,4 @@ django-uuidfield==0.5.0
 django-crispy-forms==1.4.0
 django-extensions==1.6.1
 dj-static==0.0.6
+requests==2.20.1
