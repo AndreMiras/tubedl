@@ -3,7 +3,7 @@ ACTIVATE_PATH="$(VENV_NAME)/bin/activate"
 PIP=`. $(ACTIVATE_PATH); which pip`
 TOX=`which tox`
 PYTHON="$(VENV_NAME)/bin/python"
-SYSTEM_DEPENDENCIES=python3-dev virtualenv
+SYSTEM_DEPENDENCIES=ffmpeg
 OS=$(shell lsb_release -si)
 
 
