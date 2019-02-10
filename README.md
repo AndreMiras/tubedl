@@ -14,15 +14,11 @@ It is built on top of [rg3/youtube-dl](https://github.com/rg3/youtube-dl), the [
 ## Install
 Production environment:
 ```sh
-pip install -r requirements.txt
+make virtualenv
 ```
-Development environment:
+You also need system requirements e.g. for merging video/audio:
 ```sh
-pip install -r requirements/dev.txt
-```
-You also need ffmpeg or avconv for merging video/audio:
-```sh
-apt install ffmpeg
+make system_dependencies
 ```
 
 ## Run
@@ -36,11 +32,6 @@ python manage.py runserver
 ```
 
 ## Tests
-Using Django test framework only:
 ```sh
-python manage.py test
-```
-Using Tox:
-```sh
-tox
+make test
 ```

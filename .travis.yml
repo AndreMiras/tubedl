@@ -1,12 +1,12 @@
-sudo: false
+sudo: required
 
-language: python
+language: generic
 
-python:
-  - "3.6"
+services:
+  - docker
 
 install:
-  - pip install tox-travis
+  - docker build --tag=tubedl .
 
 script:
-  - tox
+  - docker run -it --rm tubedl /bin/sh -c 'tox'
