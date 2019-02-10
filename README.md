@@ -1,5 +1,6 @@
 # tubedl
 
+[![Build Status](https://travis-ci.com/AndreMiras/tubedl.svg?branch=develop)](https://travis-ci.com/AndreMiras/tubedl)
 
 ## Online video downloader <http://tubedl.herokuapp.com/>
 
