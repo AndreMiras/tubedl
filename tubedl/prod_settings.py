@@ -1,8 +1,10 @@
+import os
+
 import dj_database_url
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
-from .base_settings import *  # noqa
+from .base_settings import *  # noqa: F403
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -10,7 +12,7 @@ TEMPLATE_DEBUG = DEBUG
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # Parse database configuration from $DATABASE_URL
-DATABASES['default'] = dj_database_url.config()
+DATABASES['default'] = dj_database_url.config()  # noqa: F405
 
 if os.environ.get('ADMIN_NAME') and os.environ.get('ADMIN_EMAIL'):
     ADMINS = (

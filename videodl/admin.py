@@ -9,4 +9,5 @@ class DownloadLinkAdmin(admin.ModelAdmin):
     readonly_fields = ("uuid", "created")
     search_fields = ("uuid", "url")
 
+
 admin.site.register(DownloadLink, DownloadLinkAdmin)
