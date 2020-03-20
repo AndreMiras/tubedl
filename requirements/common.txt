@@ -1,5 +1,5 @@
 Django<1.9
-youtube-dl==2020.2.16
+youtube-dl==2020.3.8
 django-uuidfield==0.5.0
 django-crispy-forms==1.4.0
 django-extensions==1.6.1
