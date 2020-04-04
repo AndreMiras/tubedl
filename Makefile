@@ -1,23 +1,20 @@
-VENV_NAME="venv"
-ACTIVATE_PATH="$(VENV_NAME)/bin/activate"
-PIP=`. $(ACTIVATE_PATH); which pip`
+VIRTUAL_ENV?=venv
+PIP=$(VIRTUAL_ENV)/bin/pip
 TOX=`which tox`
-PYTHON="$(VENV_NAME)/bin/python"
+PYTHON=$(VENV_NAME)/bin/python
 SYSTEM_DEPENDENCIES=ffmpeg
-OS=$(shell lsb_release -si)
 
 
 all: virtualenv
 
-virtualenv:
-	test -d venv || virtualenv -p python3 venv
-	. venv/bin/activate
+$(VIRTUAL_ENV):
+	virtualenv --python python3 venv
 	$(PIP) install -r requirements.txt
 
+virtualenv: $(VIRTUAL_ENV)
+
 system_dependencies:
-ifeq ($(OS), Ubuntu)
-	sudo apt install --yes --no-install-recommends $(SYSTEM_DEPENDENCIES)
-endif
+	apt install --yes --no-install-recommends $(SYSTEM_DEPENDENCIES)
 
 clean:
 	rm -rf venv/ .tox/ .pytest_cache/
