@@ -1,7 +1,7 @@
 Django<1.11
 youtube-dl==2020.3.24
 django-uuidfield<0.6
-django-crispy-forms<1.6
+django-crispy-forms<1.10
 django-extensions<2.3
 dj-static<0.0.7
 requests<2.24
