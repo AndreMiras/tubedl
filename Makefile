@@ -41,7 +41,7 @@ docker/build:
 	docker build --tag=$(DOCKER_IMAGE) .
 
 docker/run/test:
-	docker run -it --rm $(DOCKER_IMAGE) make test
+	docker run --env-file .env -it --rm $(DOCKER_IMAGE) make test
 
 docker/run/shell:
-	docker run -it --rm $(DOCKER_IMAGE)
+	docker run --env-file .env -it --rm $(DOCKER_IMAGE)
