@@ -1,3 +1,6 @@
+import os
+from unittest import skipIf
+
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.test import TestCase
@@ -5,9 +8,12 @@ from django.test import TestCase
 from videodl.models import DownloadLink
 
 
+def run_in_ci():
+    """Returns True if running in the CI."""
+    return "CI" in os.environ
+
+
 class VideoDlTestCase(TestCase):
-    def setUp(self):
-        pass
 
     def test_regression_isabelle_facebook_video(self):
         """
@@ -85,6 +91,9 @@ class VideoDlTestCase(TestCase):
         # verifies the form error message
         self.assertContains(response, 'This video is unavailable.')
 
+    @skipIf(
+        run_in_ci(),
+        "TravisCI is sometimes blocked from Youtube on too many requests")
     def test_download_process(self):
         """
         Go through the whole downloading process with a short video.
