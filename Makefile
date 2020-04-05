@@ -58,8 +58,10 @@ test: unittest lint
 docker/build:
 	docker build --tag=$(DOCKER_IMAGE) .
 
-docker/run/test:
-	docker run --env-file .env -it --rm $(DOCKER_IMAGE) make test
+docker/run/make/%:
+	docker run --env-file .env -it --rm $(DOCKER_IMAGE) make $*
+
+docker/run/test: docker/run/make/test
 
 docker/run/shell:
 	docker run --env-file .env -it --rm $(DOCKER_IMAGE)
