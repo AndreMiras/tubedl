@@ -9,7 +9,9 @@ ISORT=$(VIRTUAL_ENV)/bin/isort
 FLAKE8=$(VIRTUAL_ENV)/bin/flake8
 BLACK=$(VIRTUAL_ENV)/bin/black
 PYTEST=$(VIRTUAL_ENV)/bin/pytest
+GUNICORN=$(VIRTUAL_ENV)/bin/gunicorn
 DOCKER_IMAGE=andremiras/tubedl
+DOCKER_PORT=8000
 SYSTEM_DEPENDENCIES=ffmpeg
 SOURCES=tubedl/ videodl/
 
@@ -58,6 +60,15 @@ format: format/isort format/black
 
 test: unittest lint
 
+run/collectstatic: virtualenv/prod
+	$(PYTHON) manage.py collectstatic --noinput
+
+run/migrate: virtualenv/prod
+	$(PYTHON) manage.py migrate --noinput
+
+run/gunicorn: virtualenv/prod
+	$(GUNICORN) tubedl.wsgi:application --bind 0.0.0.0:$(PORT)
+
 docker/build:
 	docker build --tag=$(DOCKER_IMAGE) .
 
@@ -67,7 +78,11 @@ docker/run/make/%:
 docker/run/test: docker/run/make/test
 
 docker/run/app:
-	docker run --rm --publish 8000:8000 $(DOCKER_IMAGE)
+	docker run --env-file .env --env PORT=$(DOCKER_PORT) --publish $(DOCKER_PORT):$(DOCKER_PORT) -it --rm $(DOCKER_IMAGE)
+
+docker/run/app/production:
+	PRODUCTION=1 DJANGO_SECRET_KEY=1 \
+	docker run --env-file .env --env PORT=$(DOCKER_PORT) --publish $(DOCKER_PORT):$(DOCKER_PORT) -it --rm $(DOCKER_IMAGE)
 
 docker/run/shell:
 	docker run --env-file .env -it --rm $(DOCKER_IMAGE) /bin/bash

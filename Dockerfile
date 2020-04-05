@@ -9,12 +9,10 @@
 
 FROM ubuntu:18.04
 
-ENV USER="user" \
-    PORT=8000
+ENV USER="user"
 ENV HOME_DIR="/home/${USER}"
 ENV WORK_DIR="${HOME_DIR}" \
     PATH="${HOME_DIR}/.local/bin:${PATH}"
-EXPOSE $PORT
 
 # configure locale
 RUN apt update -qq > /dev/null && apt install -qq --yes --no-install-recommends \
@@ -27,7 +25,7 @@ ENV LANG="en_US.UTF-8" \
 
 # install system dependencies
 RUN apt -y install -qq --no-install-recommends \
-        ffmpeg make python3.8 python3-pip sudo virtualenv \
+        curl ffmpeg make python3.8 python3-pip sudo virtualenv \
     && apt -y autoremove
 
 # prepare non root env
@@ -44,4 +42,4 @@ USER ${USER}
 # setup virtualenv
 RUN make virtualenv/prod
 
-CMD venv/bin/gunicorn tubedl.wsgi --bind 0.0.0.0:$PORT
+CMD venv/bin/gunicorn tubedl.wsgi:application --bind 0.0.0.0:$PORT
