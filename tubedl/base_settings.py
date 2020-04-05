@@ -23,14 +23,8 @@ SECRET_KEY = '&7q9qfdy3u&ts899)v+)%!ghx_eht_cevb=-+)=br@ula$kscv'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
-
-TEMPLATE_DIRS = (
-    os.path.normpath(os.path.join(BASE_DIR, 'templates/')),
-)
 
 # Application definition
 
@@ -67,15 +61,26 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.request",
+TEMPLATES = (
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': (
+            os.path.normpath(os.path.join(BASE_DIR, 'templates')),
+        ),
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': (
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
+            ),
+        },
+    },
 )
 
 ROOT_URLCONF = 'tubedl.urls'

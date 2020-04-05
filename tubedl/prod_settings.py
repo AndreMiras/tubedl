@@ -7,7 +7,6 @@ from sentry_sdk.integrations.django import DjangoIntegration
 from .base_settings import *  # noqa: F403
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
