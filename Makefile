@@ -25,6 +25,9 @@ virtualenv: $(VIRTUAL_ENV)
 virtualenv/test: virtualenv
 	$(PIP) install --upgrade --requirement requirements/test.txt
 
+virtualenv/prod: virtualenv
+	$(PIP) install --upgrade --requirement requirements/prod.txt
+
 system_dependencies:
 	apt install --yes --no-install-recommends $(SYSTEM_DEPENDENCIES)
 
@@ -63,5 +66,8 @@ docker/run/make/%:
 
 docker/run/test: docker/run/make/test
 
+docker/run/app:
+	docker run --rm --publish 8000:8000 $(DOCKER_IMAGE)
+
 docker/run/shell:
-	docker run --env-file .env -it --rm $(DOCKER_IMAGE)
+	docker run --env-file .env -it --rm $(DOCKER_IMAGE) /bin/bash

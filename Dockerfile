@@ -9,6 +9,13 @@
 
 FROM ubuntu:18.04
 
+ENV USER="user" \
+    PORT=8000
+ENV HOME_DIR="/home/${USER}"
+ENV WORK_DIR="${HOME_DIR}" \
+    PATH="${HOME_DIR}/.local/bin:${PATH}"
+EXPOSE $PORT
+
 # configure locale
 RUN apt update -qq > /dev/null && apt install -qq --yes --no-install-recommends \
     locales && \
@@ -17,11 +24,6 @@ RUN apt update -qq > /dev/null && apt install -qq --yes --no-install-recommends 
 ENV LANG="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8"
-
-ENV USER="user"
-ENV HOME_DIR="/home/${USER}"
-ENV WORK_DIR="${HOME_DIR}" \
-    PATH="${HOME_DIR}/.local/bin:${PATH}"
 
 # install system dependencies
 RUN apt -y install -qq --no-install-recommends \
@@ -40,4 +42,6 @@ COPY --chown=user:user . ${WORK_DIR}
 USER ${USER}
 
 # setup virtualenv
-RUN make virtualenv
+RUN make virtualenv/prod
+
+CMD venv/bin/gunicorn tubedl.wsgi --bind 0.0.0.0:$PORT
