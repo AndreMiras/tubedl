@@ -1,11 +1,11 @@
 # Build with:
-#     docker build --tag=tubedl .
+#     docker build --tag=andremiras/tubedl .
 #
 # Run e.g. tests with:
-#     docker run -it --rm tubedl /bin/sh -c 'make test'
+#     docker run -it --rm andremiras/tubedl /bin/sh -c 'make test'
 #
 # Or for interactive shell:
-#     docker run -it --rm tubedl
+#     docker run -it --rm andremiras/tubedl
 
 FROM ubuntu:18.04
 
