@@ -18,6 +18,6 @@ urlpatterns = [
     url(r"^contact/$", views.contact, name="contact"),
     url(r"^error404/$", views.error404, name="error404"),
     url(r"^error500/$", views.error500, name="error500"),
-    url(r"^admin/", include(admin.site.urls)),
+    url(r"^admin/", admin.site.urls),
     url(r"^dl/", include("videodl.urls")),
 ]
