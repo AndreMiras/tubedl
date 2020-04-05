@@ -10,7 +10,7 @@ from videodl.models import DownloadLink
 class DownloadForm(forms.ModelForm):
     class Meta:
         model = DownloadLink
-        fields = ['url']
+        fields = ["url"]
 
     def __init__(self, *args, **kwargs):
         """
@@ -19,20 +19,21 @@ class DownloadForm(forms.ModelForm):
         """
         super(DownloadForm, self).__init__(*args, **kwargs)
         # Customizes the URL widget with place order.
-        self.fields['url'].widget = forms.TextInput(attrs={
-            'placeholder': 'http://somesite.com/video'})
+        self.fields["url"].widget = forms.TextInput(
+            attrs={"placeholder": "http://somesite.com/video"}
+        )
         # Adds Twitter Bootstrap 3 "form-control" class.
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs["class"] = "form-control"
         # large input
-        self.fields['url'].widget.attrs['class'] += ' input-lg'
+        self.fields["url"].widget.attrs["class"] += " input-lg"
 
     def clean_url(self):
         """
         - verifies at least one extractor recognizes it
         - verifies the URL exists
         """
-        url = self.cleaned_data['url']
+        url = self.cleaned_data["url"]
         extractors = list(extractor._ALL_CLASSES)
         # GenericIE always returns True for suitable(url)
         extractors.remove(extractor.generic.GenericIE)
@@ -47,6 +48,4 @@ class DownloadForm(forms.ModelForm):
 
 
 class DownloadFormat(forms.Form):
-    audio_only = forms.BooleanField(
-        widget=forms.HiddenInput,
-        required=False)
+    audio_only = forms.BooleanField(widget=forms.HiddenInput, required=False)

@@ -9,6 +9,7 @@ class Command(NoArgsCommand):
     Usage example:
     HOSTNAME=tubedl.herokuapp.com python manage.py keepalive
     """
+
     help = 'Pings os.environ["HOSTNAME"] to keep dyno alive.'
 
     def handle_noargs(self, **options):

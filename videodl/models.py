@@ -8,8 +8,8 @@ class DownloadLink(models.Model):
     """
     Share a download.
     """
-    uuid = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False)
+
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, blank=True, default="")
     url = models.URLField(max_length=255)
     created = models.DateTimeField(auto_now=True)
@@ -27,7 +27,7 @@ class DownloadLink(models.Model):
         return file_paths
 
     def get_url_friendly_title(self):
-        title_sanitized = quote(self.title.encode('utf8'))
+        title_sanitized = quote(self.title.encode("utf8"))
         return title_sanitized
 
     def get_file_path(self, audio=False):

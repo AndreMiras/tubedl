@@ -8,25 +8,44 @@ import uuid
 
 class Migration(migrations.Migration):
 
-    replaces = [('videodl', '0001_initial'), ('videodl', '0002_auto_20141221_2312'), ('videodl', '0003_downloadlink_title'), ('videodl', '0004_auto_20150301_2142'), ('videodl', '0005_auto_20190210_1103')]
+    replaces = [
+        ("videodl", "0001_initial"),
+        ("videodl", "0002_auto_20141221_2312"),
+        ("videodl", "0003_downloadlink_title"),
+        ("videodl", "0004_auto_20150301_2142"),
+        ("videodl", "0005_auto_20190210_1103"),
+    ]
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='DownloadLink',
+            name="DownloadLink",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('url', models.URLField(max_length=255)),
-                ('created', models.DateTimeField(auto_now=True)),
-                ('last_download', models.DateTimeField(auto_now_add=True)),
-                ('views', models.PositiveIntegerField(default=0)),
-                ('audio_path', models.CharField(blank=True, default='', max_length=255)),
-                ('video_path', models.CharField(blank=True, default='', max_length=255)),
-                ('title', models.CharField(blank=True, default='', max_length=255)),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("url", models.URLField(max_length=255)),
+                ("created", models.DateTimeField(auto_now=True)),
+                ("last_download", models.DateTimeField(auto_now_add=True)),
+                ("views", models.PositiveIntegerField(default=0)),
+                (
+                    "audio_path",
+                    models.CharField(blank=True, default="", max_length=255),
+                ),
+                (
+                    "video_path",
+                    models.CharField(blank=True, default="", max_length=255),
+                ),
+                ("title", models.CharField(blank=True, default="", max_length=255)),
             ],
         ),
     ]
