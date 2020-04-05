@@ -25,7 +25,7 @@ ENV WORK_DIR="${HOME_DIR}" \
 
 # install system dependencies
 RUN apt -y install -qq --no-install-recommends \
-        ffmpeg make python3 python3-pip sudo virtualenv \
+        ffmpeg make python3.8 python3-pip sudo virtualenv \
     && apt -y autoremove
 
 # prepare non root env

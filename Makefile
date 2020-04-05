@@ -1,5 +1,9 @@
 VIRTUAL_ENV?=venv
 PIP=$(VIRTUAL_ENV)/bin/pip
+PYTHON_MAJOR_VERSION=3
+PYTHON_MINOR_VERSION=8
+PYTHON_VERSION=$(PYTHON_MAJOR_VERSION).$(PYTHON_MINOR_VERSION)
+PYTHON_WITH_VERSION=python$(PYTHON_VERSION)
 PYTHON=$(VIRTUAL_ENV)/bin/python
 ISORT=$(VIRTUAL_ENV)/bin/isort
 FLAKE8=$(VIRTUAL_ENV)/bin/flake8
@@ -13,7 +17,7 @@ SOURCES=tubedl/ videodl/
 all: virtualenv
 
 $(VIRTUAL_ENV):
-	virtualenv --python python3 venv
+	virtualenv --python $(PYTHON_WITH_VERSION) $(VIRTUAL_ENV)
 	$(PIP) install --upgrade --requirement requirements.txt
 
 virtualenv: $(VIRTUAL_ENV)
