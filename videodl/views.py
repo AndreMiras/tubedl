@@ -5,9 +5,9 @@ from mimetypes import MimeTypes
 from urllib.request import pathname2url
 
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from youtube_dl import YoutubeDL, extractor
 from youtube_dl.postprocessor.ffmpeg import FFmpegExtractAudioPP
 from youtube_dl.utils import DownloadError

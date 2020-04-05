@@ -41,7 +41,7 @@ lint/black: virtualenv/test
 lint: lint/isort lint/flake8 lint/black
 
 format/isort: virtualenv/test
-	$(ISORT) --diff --recursive $(SOURCES)
+	$(ISORT) --recursive $(SOURCES)
 
 format/black: virtualenv/test
 	$(BLACK) $(SOURCES)

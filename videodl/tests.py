@@ -1,9 +1,9 @@
 import os
 from unittest import skipIf
 
-from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.test import TestCase
+from django.urls import reverse
 
 from videodl.models import DownloadLink
 

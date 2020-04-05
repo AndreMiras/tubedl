@@ -51,7 +51,7 @@ INSTALLED_APPS = DJANGO_CORE_APP + THIRDPARTY_APP + CUSTOM_APPS
 
 EMAIL_SUBJECT_PREFIX = "[TubeDL] "
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

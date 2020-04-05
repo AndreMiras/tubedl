@@ -3,10 +3,10 @@ import sys
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render
 from django.template import Context, loader
+from django.urls import reverse
 
 from tubedl.forms import ContactForm
 from videodl.forms import DownloadForm
