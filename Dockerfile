@@ -2,7 +2,7 @@
 #     docker build --tag=tubedl .
 #
 # Run e.g. tests with:
-#     docker run -it --rm tubedl /bin/sh -c 'tox'
+#     docker run -it --rm tubedl /bin/sh -c 'make test'
 #
 # Or for interactive shell:
 #     docker run -it --rm tubedl
@@ -25,7 +25,7 @@ ENV WORK_DIR="${HOME_DIR}" \
 
 # install system dependencies
 RUN apt -y install -qq --no-install-recommends \
-        ffmpeg make python3 python3-pip sudo tox virtualenv \
+        ffmpeg make python3 python3-pip sudo virtualenv \
     && apt -y autoremove
 
 # prepare non root env
