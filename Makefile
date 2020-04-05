@@ -28,12 +28,17 @@ unittest: virtualenv/test
 	$(PYTHON) manage.py test
 
 lint/isort: virtualenv/test
-	$(ISORT) --check-only --diff --skip .tox --skip venv --skip migrations --recursive
+	$(ISORT) --check-only --diff --recursive
 
 lint/flake8: virtualenv/test
 	$(FLAKE8) $(SOURCES)
 
 lint: lint/isort lint/flake8
+
+format/isort: virtualenv/test
+	$(ISORT) --diff --recursive
+
+format: format/isort
 
 test: unittest lint
 
