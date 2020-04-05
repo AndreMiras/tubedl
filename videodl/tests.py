@@ -55,6 +55,9 @@ class VideoDlTestCase(TestCase):
         # verifies the form error message
         self.assertContains(response, 'URL not supported.')
 
+    @skipIf(
+        run_in_ci(),
+        "TravisCI is sometimes blocked from Youtube on too many requests")
     def test_incomplete_youtube_id(self):
         """
         Video with a wrong ID shoudln't crash the application,
@@ -73,6 +76,9 @@ class VideoDlTestCase(TestCase):
         # verifies the form error message
         self.assertContains(response, 'Incomplete YouTube ID')
 
+    @skipIf(
+        run_in_ci(),
+        "TravisCI is sometimes blocked from Youtube on too many requests")
     def test_url_not_found(self):
         """
         Video not found shoudln't crash the application,
