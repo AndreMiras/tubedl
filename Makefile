@@ -4,6 +4,7 @@ PYTHON=$(VIRTUAL_ENV)/bin/python
 ISORT=$(VIRTUAL_ENV)/bin/isort
 FLAKE8=$(VIRTUAL_ENV)/bin/flake8
 BLACK=$(VIRTUAL_ENV)/bin/black
+PYTEST=$(VIRTUAL_ENV)/bin/pytest
 DOCKER_IMAGE=andremiras/tubedl
 SYSTEM_DEPENDENCIES=ffmpeg
 SOURCES=tubedl/ videodl/
@@ -27,7 +28,7 @@ clean:
 	rm -rf venv/ .pytest_cache/
 
 unittest: virtualenv/test
-	$(PYTHON) manage.py test
+	$(PYTEST) $(SOURCES)
 
 lint/isort: virtualenv/test
 	$(ISORT) --check-only --diff --recursive $(SOURCES)
