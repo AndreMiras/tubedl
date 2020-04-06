@@ -1,7 +1,5 @@
 -r common.txt
 dj-database-url<0.6
-gunicorn==19.9.0
+gunicorn<21
 psycopg2-binary<2.9
-pystache==0.5.3
-static==1.0.2
-sentry-sdk==0.3.9
+sentry-sdk<0.15
