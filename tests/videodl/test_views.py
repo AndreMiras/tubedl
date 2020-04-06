@@ -13,7 +13,7 @@ def run_in_ci():
     return "CI" in os.environ
 
 
-class VideoDlTestCase(TestCase):
+class TestVideoDl(TestCase):
     def test_regression_isabelle_facebook_video(self):
         """
         This is a regression test a video that returned a Download error
@@ -29,9 +29,9 @@ class VideoDlTestCase(TestCase):
         download_form_url = reverse("download_form")
         response = self.client.post(download_form_url, {"url": video_url}, follow=True)
         # verifies the status_code is OK
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         # verifies the info e.g. title could actually be extracted
-        self.assertContains(response, "Mon premier combat")
+        assert b"Mon premier combat" in response.content
 
     def test_url_not_supported(self):
         """
@@ -42,9 +42,9 @@ class VideoDlTestCase(TestCase):
         download_form_url = reverse("download_form")
         response = self.client.post(download_form_url, {"url": video_url}, follow=True)
         # verifies the status_code is OK
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         # verifies the form error message
-        self.assertContains(response, "URL not supported.")
+        assert b"URL not supported." in response.content
 
     @skipIf(
         run_in_ci(), "TravisCI is sometimes blocked from Youtube on too many requests"
@@ -58,9 +58,9 @@ class VideoDlTestCase(TestCase):
         download_form_url = reverse("download_form")
         response = self.client.post(download_form_url, {"url": video_url}, follow=True)
         # verifies the status_code is OK
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         # verifies the form error message
-        self.assertContains(response, "Incomplete YouTube ID")
+        assert b"Incomplete YouTube ID" in response.content
 
     @skipIf(
         run_in_ci(), "TravisCI is sometimes blocked from Youtube on too many requests"
@@ -74,9 +74,9 @@ class VideoDlTestCase(TestCase):
         download_form_url = reverse("download_form")
         response = self.client.post(download_form_url, {"url": video_url}, follow=True)
         # verifies the status_code is OK
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         # verifies the form error message
-        self.assertContains(response, "This video is unavailable.")
+        assert b"This video is unavailable." in response.content
 
     @skipIf(
         run_in_ci(), "TravisCI is sometimes blocked from Youtube on too many requests"
@@ -87,13 +87,13 @@ class VideoDlTestCase(TestCase):
         """
         video_url = "" + "https://www.youtube.com" + "/watch?v=t3NZusaDt1M"
         # no DownloadLink object for this URL in the database before starting
-        self.assertEqual(DownloadLink.objects.filter(url=video_url).count(), 0)
+        assert DownloadLink.objects.filter(url=video_url).exists() is False
         download_form_url = reverse("download_form")
         response = self.client.post(download_form_url, {"url": video_url}, follow=True)
         # verifies the status_code is OK
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         # verifies the title could actually be extracted
-        self.assertContains(response, "Double Exposure Effect  - Short Video")
+        assert b"Double Exposure Effect  - Short Video" in response.content
         # the DownloadLink object should have been created
         download_link = DownloadLink.objects.get(url=video_url)
         # use the UUID to go to the prepare_download_redirect page
@@ -105,11 +105,11 @@ class VideoDlTestCase(TestCase):
             prepare_download_redirect_url, {"audio_only": False}
         )
         # verifies the status_code is OK
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(isinstance(response, JsonResponse))
+        assert response.status_code == 200
+        assert isinstance(response, JsonResponse)
         # the JSON response should give the download_redirect_url
-        self.assertContains(response, "download_redirect_url")
-        self.assertContains(response, download_link.uuid.hex)
+        assert b"download_redirect_url" in response.content
+        assert download_link.uuid.hex in response.content.decode("utf-8")
         # accesses serve_video_download url
         serve_video_download_url = reverse(
             "serve_video_download",
@@ -121,13 +121,13 @@ class VideoDlTestCase(TestCase):
         # formats e.g. t3NZusaDt1M.f140.m4a and t3NZusaDt1M.f137.mp4
         # it's because you need ffmpeg or avconv for it to be merged into
         # a single file
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         # verifies there is an attachment
-        self.assertTrue("attachment; filename=" in response["Content-Disposition"])
-        self.assertTrue(".mp4" in response["Content-Disposition"])
+        assert "attachment; filename=" in response["Content-Disposition"]
+        assert ".mp4" in response["Content-Disposition"]
         # checking the video size
         # it seems the size may vary slightly from one libav to the other
         # so we round it
         size_oct = len(response.content)
         size_meg = round(float(size_oct) / pow(10, 6), 2)
-        self.assertEqual(size_meg, 9.87)
+        assert size_meg == 9.87
