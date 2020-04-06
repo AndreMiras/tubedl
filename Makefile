@@ -13,7 +13,7 @@ GUNICORN=$(VIRTUAL_ENV)/bin/gunicorn
 DOCKER_IMAGE=andremiras/tubedl
 DOCKER_PORT=8000
 SYSTEM_DEPENDENCIES=ffmpeg
-SOURCES=tubedl/ videodl/
+SOURCES=tests/ tubedl/ videodl/
 
 
 all: virtualenv
@@ -37,7 +37,7 @@ clean:
 	rm -rf venv/ .pytest_cache/
 
 unittest: virtualenv/test
-	$(PYTEST) $(SOURCES)
+	$(PYTEST) tests/
 
 lint/isort: virtualenv/test
 	$(ISORT) --check-only --diff --recursive $(SOURCES)
