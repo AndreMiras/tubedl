@@ -13,15 +13,5 @@
     "SENTRY_PROJECT_ID": null
   },
   "addons": ["heroku-postgresql"],
-  "buildpacks": [
-    {
-      "url": "https://github.com/jayzes/heroku-buildpack-ffmpeg"
-    },
-    {
-      "url": "heroku/python"
-    }
-  ],
-  "scripts": {
-    "postdeploy": "sh -c 'python manage.py syncdb --noinput; python manage.py migrate --noinput'"
-  }
+  "stack": "container"
 }

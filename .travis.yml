@@ -1,12 +1,10 @@
-sudo: required
-
 language: generic
 
 services:
   - docker
 
 install:
-  - docker build --tag=tubedl .
+  - make docker/build
 
 script:
-  - docker run -it --rm tubedl /bin/sh -c 'tox'
+  - make docker/run/test

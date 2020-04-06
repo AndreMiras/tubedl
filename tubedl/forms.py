@@ -8,11 +8,9 @@ class ContactForm(forms.Form):
         """
         super(ContactForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs["class"] = "form-control"
 
     subject = forms.CharField(max_length=100)
-    message = forms.CharField(
-        widget=forms.Textarea
-        )
+    message = forms.CharField(widget=forms.Textarea)
     sender = forms.EmailField()
     cc_myself = forms.BooleanField(required=False)

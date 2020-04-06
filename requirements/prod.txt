@@ -1,8 +1,5 @@
 -r common.txt
-dj-database-url==0.2.2
-django-toolbelt==0.0.1
-gunicorn==19.9.0
-psycopg2==2.7.6.1
-pystache==0.5.3
-static==1.0.2
-sentry-sdk==0.3.9
+dj-database-url<0.6
+gunicorn<21
+psycopg2-binary<2.9
+sentry-sdk<0.15
