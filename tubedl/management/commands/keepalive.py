@@ -1,10 +1,10 @@
 import os
 
 import requests
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     """
     Usage example:
     HOSTNAME=tubedl.herokuapp.com python manage.py keepalive
@@ -12,7 +12,7 @@ class Command(NoArgsCommand):
 
     help = 'Pings os.environ["HOSTNAME"] to keep dyno alive.'
 
-    def handle_noargs(self, **options):
+    def handle(self, *args, **options):
         hostname = os.environ.get("HOSTNAME")
         if hostname:
             self.stdout.write('ping "%s"' % hostname)
