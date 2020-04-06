@@ -19,7 +19,7 @@ SOURCES=tests/ tubedl/ videodl/
 all: virtualenv
 
 $(VIRTUAL_ENV):
-	virtualenv --python $(PYTHON_WITH_VERSION) $(VIRTUAL_ENV)
+	$(PYTHON_WITH_VERSION) -m venv $(VIRTUAL_ENV)
 	$(PIP) install --upgrade --requirement requirements.txt
 
 virtualenv: $(VIRTUAL_ENV)
