@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import os
 from mimetypes import MimeTypes
 from urllib.request import pathname2url
@@ -17,7 +15,7 @@ from videodl.models import DownloadLink
 
 DOWNLOAD_DIR = "/tmp/"
 YDL_OPTIONS = {
-    "outtmpl": DOWNLOAD_DIR + u"%(id)s.%(ext)s",
+    "outtmpl": DOWNLOAD_DIR + "%(id)s.%(ext)s",
     "keepvideo": True,
     "noplaylist": True,
     "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best",
@@ -57,8 +55,7 @@ def progress_hook(d):
 
 
 def extract_file_path_helper(id, ext):
-    file_path = YDL_OPTIONS["outtmpl"] % ({"id": id, "ext": ext})
-    return file_path
+    return YDL_OPTIONS["outtmpl"] % ({"id": id, "ext": ext})
 
 
 def extract_info_helper(url, extract_audio):
@@ -95,7 +92,7 @@ def handle_download_exception(request, ex):
     """
     ex_message = str(ex)
     messages.error(
-        request, "Could not download your video.\n" + "Exception was: %s" % (ex_message)
+        request, f"Could not download your video.\nException was: {ex_message}"
     )
     known_errors = set(("This video is unavailable.", "Incomplete YouTube ID",))
     # verifies if the error is known and can be handled gracefully
@@ -152,20 +149,18 @@ def download_form(request):
 
 def serve_file_helper(file_path, filename=None):
     """Serves the given local server file to remote client via attachment."""
-    if filename is None:
-        filename = os.path.basename(file_path)
+    filename = filename or os.path.basename(file_path)
     mime = MimeTypes()
     url = pathname2url(file_path)
     mimetype, encoding = mime.guess_type(url)
-    f = open(file_path, "rb")
-    response = HttpResponse(f.read(), content_type=mimetype)
+    with open(file_path, "rb") as f:
+        response = HttpResponse(f.read(), content_type=mimetype)
     response["Content-Length"] = os.path.getsize(file_path)
     # encodes the filename parameter of Content-Disposition header
     # http://stackoverflow.com/a/20933751
     response[
         "Content-Disposition"
-    ] = "attachment; filename=\"%s\"; filename*=utf-8''%s" % (filename, filename)
-    f.close()
+    ] = f"attachment; filename=\"{filename}\"; filename*=utf-8''{filename}"
     return response
 
 
@@ -196,9 +191,10 @@ def prepare_download_redirect(request, download_link_uuid):
                     download_link.title = info.get("title")
                     download_link.save()
             except DownloadError as ex:
+                ex_message = str(ex)
                 messages.error(
                     request,
-                    "Could not download your video.\n" + "Exception was: %s" % str(ex),
+                    f"Could not download your video.\nException was: {ex_message}",
                 )
                 # raises the exception so the admins get notified
                 raise

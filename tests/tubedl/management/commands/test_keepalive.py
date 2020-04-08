@@ -35,4 +35,4 @@ class TestCommand:
         ), patch_stdout_write() as m_write, patch_requests_get() as m_get:
             command.handle()
         assert m_write.call_args_list == [mock.call('ping "tubedl.herokuapp.com"')]
-        assert m_get.call_args_list == [mock.call("http://tubedl.herokuapp.com")]
+        assert m_get.call_args_list == [mock.call("https://tubedl.herokuapp.com")]

@@ -15,8 +15,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         hostname = os.environ.get("HOSTNAME")
         if hostname:
-            self.stdout.write('ping "%s"' % hostname)
-            url = "http://" + hostname
+            self.stdout.write(f'ping "{hostname}"')
+            url = f"https://{hostname}"
             requests.get(url)
         else:
             self.stdout.write("Couldn't keep alive, HOSTNAME not set")

@@ -17,8 +17,8 @@ class DownloadLink(models.Model):
     video_path = models.CharField(max_length=255, blank=True, default="")
     audio_path = models.CharField(max_length=255, blank=True, default="")
 
-    def __unicode__(self):
-        return "%s" % (self.url)
+    def __str__(self):
+        return self.url
 
     def get_file_paths(self):
         file_paths = [self.video_path, self.audio_path]
