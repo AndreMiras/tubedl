@@ -25,9 +25,7 @@ YDL_OPTIONS = {
 
 
 def supported_sites(request):
-    """
-    Returns the list of support sites.
-    """
+    """Returns the list of support sites."""
     sites = [x.IE_NAME for x in extractor.gen_extractors()]
     sites.sort()
     data = {
@@ -73,9 +71,7 @@ def extract_info_helper(url, extract_audio):
 
 
 def download_on_server(url, extract_audio=False):
-    """
-    Downloads the video locally on the server before serving it to clients.
-    """
+    """Downloads the video locally on the server before serving it to clients."""
     with YoutubeDL(YDL_OPTIONS) as ydl:
         ydl.add_progress_hook(progress_hook)
         # TODO: do the extraction while downloading
@@ -108,9 +104,7 @@ def handle_download_exception(request, ex):
 
 
 def video_info(request, download_link_uuid):
-    """
-    Retrieves video info and saves it to server database.
-    """
+    """Retrieves video info and saves it to server database."""
     download_link = get_object_or_404(DownloadLink, uuid=download_link_uuid)
     url = download_link.url
     # restores form state from session for user convenience
@@ -157,9 +151,7 @@ def download_form(request):
 
 
 def serve_file_helper(file_path, filename=None):
-    """
-    Serves the given local server file to remote client via attachment.
-    """
+    """Serves the given local server file to remote client via attachment."""
     if filename is None:
         filename = os.path.basename(file_path)
     mime = MimeTypes()

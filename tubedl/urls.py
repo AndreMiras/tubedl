@@ -5,7 +5,7 @@ from django.views.generic.base import RedirectView
 from tubedl import views
 
 admin.autodiscover()
-handler500 = "tubedl.views.custom_500"
+handler500 = "tubedl.views.error500"
 
 
 urlpatterns = [

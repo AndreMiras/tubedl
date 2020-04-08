@@ -17,7 +17,7 @@ class DownloadForm(forms.ModelForm):
         Customizes the URL widget with place order.
         Adds Twitter Bootstrap 3 "form-control" class.
         """
-        super(DownloadForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Customizes the URL widget with place order.
         self.fields["url"].widget = forms.TextInput(
             attrs={"placeholder": "http://somesite.com/video"}

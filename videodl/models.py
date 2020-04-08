@@ -5,9 +5,7 @@ from django.db import models
 
 
 class DownloadLink(models.Model):
-    """
-    Share a download.
-    """
+    """Share a download."""
 
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, blank=True, default="")
