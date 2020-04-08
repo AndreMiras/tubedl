@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render
-from django.template import Context, loader
+from django.template import loader
 from django.urls import reverse
 
 from tubedl.forms import ContactForm
@@ -46,27 +46,11 @@ def contact(request):
     return render(request, "contact.html", data)
 
 
-def error404(request):
-    """
-    Simply renders 404 error template for testing purpose.
-    """
-    data = {}
-    return render(request, "404.html", data)
-
-
 def error500(request):
-    """
-    Simply renders 500 error template for testing purpose.
-    """
-    data = {}
-    return render(request, "500.html", data)
-
-
-def custom_500(request):
     t = loader.get_template("500.html")
     exc_type, exc_value, exc_traceback = sys.exc_info()
     data = {
         "exception_type": str(exc_type),
         "exception_value": exc_value,
     }
-    return HttpResponseServerError(t.render(Context(data)))
+    return HttpResponseServerError(t.render(data))
