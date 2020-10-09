@@ -94,7 +94,12 @@ def handle_download_exception(request, ex):
     messages.error(
         request, f"Could not download your video.\nException was: {ex_message}"
     )
-    known_errors = set(("This video is unavailable.", "Incomplete YouTube ID",))
+    known_errors = set(
+        (
+            "This video is unavailable.",
+            "Incomplete YouTube ID",
+        )
+    )
     # verifies if the error is known and can be handled gracefully
     if not any([error in ex_message for error in known_errors]):
         raise
