@@ -98,6 +98,7 @@ def handle_download_exception(request, ex):
         (
             "This video is unavailable.",
             "Incomplete YouTube ID",
+            "Unable to extract video data",
         )
     )
     # verifies if the error is known and can be handled gracefully
