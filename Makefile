@@ -40,7 +40,7 @@ unittest: virtualenv/test
 	$(PYTEST) tests/
 
 lint/isort: virtualenv/test
-	$(ISORT) --check-only --diff --recursive $(SOURCES)
+	$(ISORT) --check-only --diff $(SOURCES)
 
 lint/flake8: virtualenv/test
 	$(FLAKE8) $(SOURCES)
@@ -51,7 +51,7 @@ lint/black: virtualenv/test
 lint: lint/isort lint/flake8 lint/black
 
 format/isort: virtualenv/test
-	$(ISORT) --recursive $(SOURCES)
+	$(ISORT) $(SOURCES)
 
 format/black: virtualenv/test
 	$(BLACK) $(SOURCES)
