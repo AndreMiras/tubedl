@@ -76,7 +76,7 @@ class TestVideoDl(TestCase):
         # verifies the status_code is OK
         assert response.status_code == 200
         # verifies the form error message
-        assert b"Unable to extract video data" in response.content
+        assert b"Could not download your video." in response.content
 
     @skipIf(
         run_in_ci(), "TravisCI is sometimes blocked from Youtube on too many requests"
