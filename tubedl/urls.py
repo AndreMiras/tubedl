@@ -15,7 +15,6 @@ urlpatterns = [
         RedirectView.as_view(url="/static/img/favicon.ico", permanent=True),
     ),
     url(r"^$", views.home, name="home"),
-    url(r"^contact/$", views.contact, name="contact"),
     url(r"^error500/$", views.error500, name="error500"),
     url(r"^admin/", admin.site.urls),
     url(r"^dl/", include("videodl.urls")),

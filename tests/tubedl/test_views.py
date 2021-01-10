@@ -9,12 +9,6 @@ class TestViews(TestCase):
         assert response.status_code == 200
         assert b"<h3>Online video downloader</h3>" in response.content
 
-    def test_contact(self):
-        contact_url = reverse("contact")
-        response = self.client.get(contact_url)
-        assert response.status_code == 200
-        assert b"<h1>Contact</h1>" in response.content
-
     def test_error404(self):
         error404_url = "does_not_exist"
         response = self.client.get(error404_url)
