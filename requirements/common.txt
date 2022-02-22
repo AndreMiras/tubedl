@@ -1,5 +1,5 @@
 Django<3.1
-youtube-dl==2021.2.4.1
+youtube-dl==2021.12.17
 django-crispy-forms<1.10
 django-extensions<2.3
 dj-static<0.0.7
