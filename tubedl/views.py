@@ -17,9 +17,9 @@ def home(request):
     return render(request, "videodl/download_form.html", data)
 
 
-def error500(request):
+def error500(_request):
     t = loader.get_template("500.html")
-    exc_type, exc_value, exc_traceback = sys.exc_info()
+    exc_type, exc_value, _ = sys.exc_info()
     data = {
         "exception_type": str(exc_type),
         "exception_value": exc_value,

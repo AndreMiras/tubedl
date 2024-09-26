@@ -48,8 +48,6 @@ def get_progress(request):
 def progress_hook(d):
     if d["status"] == "downloading":
         print("Downloading")
-        # d['downloaded_bytes']
-        # d['total_bytes']
     elif d["status"] == "finished":
         print("Done downloading, now converting ...")
 
@@ -71,8 +69,8 @@ def download_on_server(url, extract_audio=False):
     """Downloads the video locally on the server before serving it to clients."""
     with YoutubeDL(YDL_OPTIONS) as ydl:
         ydl.add_progress_hook(progress_hook)
-        # TODO: do the extraction while downloading
-        # TODO: the info was already extracted at this point
+        # TODO: do the extraction while downloading,
+        # the info was already extracted at this point
         info = extract_info_helper(url, extract_audio)
         if extract_audio:
             info["ext"] = "mp3"
@@ -139,7 +137,7 @@ def download_form(request):
         if form.is_valid():
             url = form.cleaned_data["url"]
             # saves the download info as a DownloadLink for later reshare
-            download_link, created = DownloadLink.objects.get_or_create(url=url)
+            download_link, _ = DownloadLink.objects.get_or_create(url=url)
             # messages.success(request, 'Your download will start shortly.')
             return HttpResponseRedirect(
                 reverse(
